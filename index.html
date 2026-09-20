@@ -387,6 +387,17 @@ figure svg{display:block;width:100%;height:auto;max-width:100%}
 figcaption{font-size:.79rem;color:var(--fg-faint);margin-top:9px;font-family:var(--mono);letter-spacing:.02em;line-height:1.5}
 .scroller{overflow-x:auto}
 
+/* decision log, bought-vs-built, changelog (added 20 Sept 2026) */
+.dlog .scar{margin-top:0}
+.dlog .scar h4{margin-bottom:.4rem}
+.dlog .card p+p,.dlog .scar p+p,.buy .card p+p{margin-top:.55rem}
+.buy .card p{max-width:none}
+.since ul{margin:.5rem 0 0;padding-left:1.15em;color:var(--fg-dim);font-size:.85rem;line-height:1.5}
+.since li{margin:.32rem 0}
+.since li b{color:var(--teal);font-weight:600;font-family:var(--mono);font-size:.74em;letter-spacing:.06em;text-transform:uppercase;margin-right:.35em;white-space:nowrap}
+.since .hstats{margin-top:0}
+.tblwrap{overflow-x:auto}
+
 footer{padding:34px clamp(1.1rem,4vw,3rem) 54px;max-width:var(--maxw);margin:0 auto}
 footer p{font-family:var(--mono);font-size:.71rem;line-height:1.75;color:var(--fg-faint);max-width:74ch}
 footer b{color:var(--fg-dim);font-weight:500}
@@ -409,14 +420,18 @@ footer b{color:var(--fg-dim);font-weight:500}
     <a href="#data"><i>04</i><span>Data</span></a>
     <a href="#network"><i>05</i><span>Network</span></a>
     <a href="#stack"><i>&mdash;</i><span>Under the hood</span></a>
+    <a href="#decisions"><i>&mdash;</i><span>Decisions</span></a>
+    <a href="#buy"><i>&mdash;</i><span>Bought vs built</span></a>
     <a href="#money"><i>06</i><span>Money</span></a>
     <a href="#forms"><i>07</i><span>Forms &amp; paper</span></a>
     <a href="#students"><i>08</i><span>Students</span></a>
     <a href="#rentals"><i>09</i><span>Rentals</span></a>
     <a href="#off"><i>10</i><span>Switched off</span></a>
     <a href="#next"><i>11</i><span>Where it goes</span></a>
+    <a href="#method"><i>12</i><span>How work ships</span></a>
+    <a href="#since"><i>13</i><span>What changed</span></a>
   </nav>
-  <div class="railfoot">Barcelona<br>As-built, Sept 2026<br>Structural map &middot; no live data</div>
+  <div class="railfoot">Barcelona<br>As built 3 Sept 2026<br>Updated 20 Sept 2026<br>Structural map &middot; no live data</div>
 </aside>
 
 <main class="main">
@@ -436,9 +451,9 @@ footer b{color:var(--fg-dim);font-weight:500}
     <div class="hstats">
       <span><b>3</b> businesses</span>
       <span><b>1</b> platform</span>
-      <span><b>21</b> panel pages</span>
-      <span><b>394</b> endpoints</span>
-      <span><b>130</b> schema migrations</span>
+      <span><b>27</b> panel pages</span>
+      <span><b>536</b> endpoints</span>
+      <span><b>162</b> schema migrations</span>
       <span><b>5</b> languages at the edge</span>
     </div>
   </div>
@@ -688,10 +703,10 @@ footer b{color:var(--fg-dim);font-weight:500}
     <p class="lead">One web app that the whole staff lives in. Its design brief is momentum: show the one thing to do next, then the next, and never leave someone staring at a card with no obvious move. It reshapes itself around whoever signed in.</p>
 
     <dl class="facts">
-      <div><dt>Backend</dt><dd>47 routers &middot; 394 endpoints<em>Python, async, one process</em></dd></div>
-      <div><dt>Frontend</dt><dd>21 pages &middot; 54 components<em>served from the same origin</em></dd></div>
+      <div><dt>Backend</dt><dd>60 routers &middot; 536 endpoints<em>Python, async, one process</em></dd></div>
+      <div><dt>Frontend</dt><dd>27 pages &middot; 13 loaded lazily<em>served from the same origin</em></dd></div>
       <div><dt>Roles</dt><dd>Seven, fenced in middleware<em>a role cannot widen by accident</em></dd></div>
-      <div><dt>Tests</dt><dd>200 test files, three engines<em>run against the real stack too</em></dd></div>
+      <div><dt>Tests</dt><dd>325 test files, 6,058 tests, three engines<em>run against the real stack too</em></dd></div>
     </dl>
 
     <h3 style="margin-top:2.2rem">What the staff actually work</h3>
@@ -721,6 +736,8 @@ footer b{color:var(--fg-dim);font-weight:500}
       <div class="card"><div class="kt">every 60s</div><h4>Intake sync</h4><p>Pulls signups, vouchers, bookings and payments in, and retries any confirmation email that did not land.</p></div>
       <div class="card"><div class="kt">nightly</div><h4>Lifecycle crons</h4><p>Resurfaces pauses due back, chases returns, ages exam records, files what has gone quiet.</p></div>
       <div class="card"><div class="kt">every 30m</div><h4>Fuel prices</h4><p>Caches the national diesel price so a delivery quote never waits on a government server.</p></div>
+      <div class="card"><div class="kt">every 30s</div><h4>Door health</h4><p>Ages every controller's last check-in, so the panel's reachable dot is a measured fact with a clock on it rather than a remembered one.</p></div>
+      <div class="card"><div class="kt">every 30s &middot; 60s</div><h4>Fault ring, pool gauges</h4><p>Faults are buffered in memory and flushed to a durable table every 30 seconds, on every machine, because the database is by definition misbehaving when this fires. The pool's gauges are logged every 60 seconds.</p></div>
       <div class="card"><div class="kt">nightly</div><h4>Off-site backup</h4><p>A full database dump leaves the platform every night and is verified on arrival.</p></div>
     </div>
       <h3 style="margin-top:2.6rem">What it actually looks like</h3>
@@ -762,7 +779,7 @@ footer b{color:var(--fg-dim);font-weight:500}
   <div class="inner">
     <p class="ey"><s></s> Data <b>04</b></p>
     <h2>Append, derive, never clobber</h2>
-    <p class="lead">The database is one schema, built by 130 numbered migrations that are only ever added to. The shape of it is deliberate: durable identities at the bottom, an immutable event log above them, and current state calculated rather than stored.</p>
+    <p class="lead">The database is one schema, built by 162 numbered migrations that are only ever added to. The shape of it is deliberate: durable identities at the bottom, an immutable event log above them, and current state calculated rather than stored.</p>
 
     <div class="split">
       <div>
@@ -928,7 +945,7 @@ footer b{color:var(--fg-dim);font-weight:500}
         <div><dt>Check-in</dt><dd>outbound every <b>3,000 ms</b>, 4,000 ms timeout, carrying telemetry on the query string</dd></div>
         <div><dt>Relay</dt><dd>duration clamped to <b>300&ndash;15,000 ms</b>; auto-relock is a hardware one-shot timer <em>and</em> a redundant check in the main loop</dd></div>
         <div><dt>Offline log</dt><dd>16-entry ring buffer, 12 bytes each &mdash; <b>192 bytes of RAM</b> &mdash; guarded by a spinlock because the radio callback runs on another task</dd></div>
-        <div><dt>Image</dt><dd><b>1,324,768 bytes</b>, 67.4% of one of two OTA slots &middot; 54,708 bytes static RAM, 16.7% of budget</dd></div>
+        <div><dt>Image</dt><dd><b>about 1,341,500 bytes</b> for the self-updating 1.3.0 build, 68% of a 1,966,080-byte OTA slot; two slots, so a bad image rolls back by itself. The build script refuses anything at or over 1,900,000 bytes &middot; 54,708 bytes static RAM, 16.7% of budget, as last measured</dd></div>
         <div><dt>Reports</dt><dd>13 fields including <b>ble_advertising</b> &mdash; the field that distinguishes "reachable" from "can actually let someone in"</dd></div>
       </dl>
       <p style="margin-top:1rem">Two details worth the detour. The device has <strong>no clock</strong>, so a buffered unlock is sent as an age in milliseconds rather than a timestamp, computed with unsigned arithmetic so it survives the counter wrapping, and clamped to an hour so a wrapped value can never claim to be more recent than it is. And the flush is by <strong>sequence number, not by clearing the buffer</strong>: events queued while the request was in flight survive it, and the server de-duplicates on boot id plus sequence, so a lost acknowledgement replays harmlessly.</p>
@@ -936,7 +953,7 @@ footer b{color:var(--fg-dim);font-weight:500}
 
     <div class="layer">
       <div class="lhead"><span class="pip" style="background:var(--teal)"></span><h3>The backend</h3>
-        <span class="lmeta">FastAPI &middot; Python 3.12 &middot; 47 routers, 394 endpoints</span></div>
+        <span class="lmeta">FastAPI 0.141 &middot; Python 3.12 &middot; 60 routers, 536 endpoints</span></div>
       <p>One uvicorn process per machine, deliberately with no worker flag &mdash; which is what makes the rest of the design coherent, because it means exactly one event loop, one connection pool and <strong>exactly two leader candidates cluster-wide</strong>.</p>
       <dl class="spec">
         <div><dt>Machines</dt><dd>2, always on, 1 vCPU / 2 GB each &middot; one region, chosen to sit beside the database</dd></div>
@@ -944,7 +961,7 @@ footer b{color:var(--fg-dim);font-weight:500}
         <div><dt>Leader</dt><dd>a Postgres session advisory lock on a dedicated connection outside the pool, because pool recycling would silently drop it</dd></div>
         <div><dt>Failover</dt><dd>instant on deploy; on a crash, bounded by TCP keepalive at <b>30 + 3&times;10 = 60s</b>. No lease, no clock comparison, no split brain</dd></div>
         <div><dt>Boot</dt><dd>pool &rarr; advisory lock &rarr; migrate &rarr; unlock, so two machines starting together cannot race the schema</dd></div>
-        <div><dt>Loops</dt><dd>five, staggered 10 / 20 / 30 / 45s at startup, four of them leader-gated</dd></div>
+        <div><dt>Loops</dt><dd>seven. Five are staggered 10 / 20 / 30 / 45 / 60s at startup so a fresh machine never fires everything at once, with the mutating ones leader-gated; the two newest (pool telemetry every 60s, a fault-ring flush every 30s) deliberately run on every machine, because the database is by definition misbehaving when they matter</dd></div>
         <div><dt>Connections</dt><dd>floor 8, ceiling 22, every session capped at a 5s statement timeout and a 2s lock timeout</dd></div>
       </dl>
       <div class="scar">
@@ -955,24 +972,26 @@ footer b{color:var(--fg-dim);font-weight:500}
 
     <div class="layer">
       <div class="lhead"><span class="pip" style="background:var(--teal)"></span><h3>The data layer</h3>
-        <span class="lmeta">Postgres 16 &middot; psycopg3 &middot; 130 migrations</span></div>
+        <span class="lmeta">Postgres 16.14 &middot; psycopg 3.3.6 &middot; 162 migrations</span></div>
       <p>A connection pool with a lease taken per request, and an unusual constraint: the entire codebase was written against sqlite's implicit transaction model, so the layer <strong>reproduces those semantics on Postgres</strong> rather than rewriting a thousand call sites. Reads run autocommit; the first write opens a transaction.</p>
       <dl class="spec">
-        <div><dt>Pool</dt><dd>min 3, max 10 &middot; 5s checkout &middot; 30 min max lifetime &middot; 10 min max idle</dd></div>
+        <div><dt>Pool</dt><dd>min 3, max 10 &middot; 5s checkout &middot; 30 min max lifetime &middot; 10 min max idle &middot; 5s connect, 30s reconnect &middot; every session also carries a 60s idle-in-transaction timeout</dd></div>
         <div><dt>Money safety</dt><dd>commit attempts are counted <b>before</b> the commit is sent, so a request that <em>might</em> have committed is never auto-retried. Ambiguity surfaces as an error, never as a double charge</dd></div>
-        <div><dt>Migrations</dt><dd>append-only, never edited once applied. A machine-generated copy of the resulting schema is committed beside them and CI fails on drift</dd></div>
-        <div><dt>Tests</dt><dd>200 files across three engines &mdash; fast sqlite, real Postgres, and Postgres through the exact production connection stack</dd></div>
+        <div><dt>Migrations</dt><dd>append-only, never edited once applied. A machine-generated copy of the resulting schema is committed beside them and CI fails on drift. Since September every migration must also reapply on Postgres from the previous version</dd></div>
+        <div><dt>Watchdog</dt><dd>one daemon thread per process, waking four times a second: <b>9.0s</b> for a query, <b>12.0s</b> for a commit, <b>3.0s</b> for a pool checkout. It cancels on the server, then shuts the socket down so the blocked caller returns in about 1 ms. A COMMIT is never cancelled. Every fault is a durable row naming its class, route, elapsed time and the pool gauges</dd></div>
+        <div><dt>Driver</dt><dd>psycopg-binary pinned at 3.3.6, which bundles libpq 18.6; 18.0's SSL pending-bytes deadlock was the root cause of the September stalls. Every dependency, transitives included, is pinned by a constraints file</dd></div>
+        <div><dt>Tests</dt><dd>325 files, 6,058 tests collected, across three engines &mdash; fast sqlite, real Postgres, and Postgres through the exact production connection stack. The last full run through that stack, at release 1142 on 19 September 2026: <b>5,873 passed, 99 skipped, 0 failed</b></dd></div>
       </dl>
     </div>
 
     <div class="layer">
       <div class="lhead"><span class="pip" style="background:var(--teal)"></span><h3>The panel</h3>
-        <span class="lmeta">React 19.2 &middot; Vite 7.3 &middot; Tailwind 4.2</span></div>
-      <p>21 pages, of which 9 are lazily loaded &mdash; and the split is drawn on <strong>role, not on file size</strong>. A secretary, a rental driver or a debt chaser should not download code for a page their token can never open.</p>
+        <span class="lmeta">React 19.2.4 &middot; Vite 7.3.1 &middot; Tailwind 4.2.1</span></div>
+      <p>27 pages, of which 13 are lazily loaded &mdash; and the split is drawn on <strong>role, not on file size</strong>. A secretary, a rental driver or a debt chaser should not download code for a page their token can never open.</p>
       <dl class="spec">
-        <div><dt>Payload</dt><dd>12 chunks, 1.97 MB raw. The charting library alone is <b>32% of all shipped JavaScript</b> and never reaches a non-admin login</dd></div>
+        <div><dt>Payload</dt><dd>21 chunks, 2,494,830 bytes raw, built from 873 modules in 1.7s. The main chunk is 1,268,623 bytes (338.7 kB gzipped) and is the one to watch. The charting library is <b>14% of all shipped JavaScript</b> (355,165 bytes) and never reaches a non-admin login; the framework sits in its own immutable 230,379-byte vendor chunk (73.8 kB gzipped) so a deploy no longer re-downloads it</dd></div>
         <div><dt>Layouts</dt><dd>resolved from the <b>union</b> of roles, not one primary role, so a second grant can never silently narrow somebody's access</dd></div>
-        <div><dt>Server fence</dt><dd><b>200</b> role dependencies across the routers, plus three middlewares that restrict by HTTP method and by path before any route runs</dd></div>
+        <div><dt>Server fence</dt><dd><b>235</b> role dependencies across the routers, plus three middlewares that restrict by HTTP method and by path before any route runs</dd></div>
         <div><dt>Allowlists</dt><dd>matched on path <b>segments</b>, not string prefixes, so granting one path cannot accidentally grant a longer one that starts the same way</dd></div>
         <div><dt>Timeouts</dt><dd>30s globally, 120s for uploads, with three endpoints deliberately exempt because their server work cannot be cancelled</dd></div>
       </dl>
@@ -984,9 +1003,9 @@ footer b{color:var(--fg-dim);font-weight:500}
 
     <div class="layer">
       <div class="lhead"><span class="pip" style="background:var(--amber)"></span><h3>The app</h3>
-        <span class="lmeta">Expo 54 &middot; React Native 0.81 &middot; both stores</span></div>
+        <span class="lmeta">Expo 54 &middot; React Native 0.81.5 &middot; React 19.1 &middot; both stores</span></div>
       <dl class="spec">
-        <div><dt>Languages</dt><dd><b>229 keys &times; 5 languages</b>, typed so that a key missing any one of them <b>fails the build</b>. Not a lint rule, not a runtime fallback</dd></div>
+        <div><dt>Languages</dt><dd><b>637 keys &times; 5 languages</b> (412 in the customer app, 225 on the teacher side), typed so that a key missing any one of them <b>fails the build</b>. Not a lint rule, not a runtime fallback</dd></div>
         <div><dt>Bluetooth</dt><dd>one radio manager for the process lifetime, a 6s wait for the radio to settle, an 8s scan, a 5s connect</dd></div>
         <div><dt>Failure</dt><dd>seven distinct reason codes, each translated into all five languages, plus a diagnostic line a maintainer can read and a teacher can ignore</dd></div>
         <div><dt>Releases</dt><dd>a version-code ledger kept by hand, because the store burns a number permanently the moment a build is uploaded</dd></div>
@@ -1016,6 +1035,306 @@ footer b{color:var(--fg-dim);font-weight:500}
     </div>
 
     <div class="call"><p>A pattern runs through all of it: <span class="tq">prefer the failure that a human will notice</span>. Flag the underpaid booking rather than reject it, report "this may have saved" rather than a clean lie, let the audit log lose a row rather than block a door, and never let a green tick mean anything other than the thing actually happened.</p></div>
+  </div>
+</section>
+
+<!-- ============ DECISIONS ============ -->
+<section class="sec" id="decisions">
+  <div class="inner">
+    <p class="ey"><s></s> Decisions <b>&mdash;</b></p>
+    <h2>Decisions, and what each one cost</h2>
+    <p class="lead">Eighteen choices that shaped the platform, told the same way each time: the situation, the choice, what it cost, what it bought. The ones marked as scars were somebody's bad night, written down so nobody has to have it twice. Every figure is from the code or the release record, not from memory.</p>
+
+    <div class="grid g2 dlog">
+
+      <div class="scar">
+        <span class="sk">scar &middot; July 2026</span>
+        <h4>The database moved to managed Postgres</h4>
+        <p><strong>Situation.</strong> Production ran on an embedded-replica database with about 850 lines of shim and roughly 1,500 lines of survival machinery around it: a keep-alive that doubled as a restart watchdog, soft and hard resync paths, a compare-and-set lease with a 120-second TTL. The client held the interpreter lock during network I/O, the server evicted idle streams after 10 seconds, and the native client crashed four times in five days.</p>
+        <p><strong>Choice.</strong> Fly Managed Postgres through a psycopg pool, hard cutover on 31 July 2026 after moving both machines to sit beside the cluster. No dual-backend layer: "double surface for a solo maintainer". The old database was frozen as a shadow reference and checked daily for parity until shadow-end on 14 August.</p>
+        <p><strong>Cost.</strong> Five design documents, 403 failures and 158 errors burnt down to zero in one morning, a rehearsed cutover proven by two exports with identical per-table checksums, two weeks of shadow checks.</p>
+        <p><strong>Bought.</strong> Real statement timeouts, real pooling, foreign keys that are actually enforced, and the deletion of the whole survival layer.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; 29 July 2026</div>
+        <h4>One shim reproduces sqlite's semantics on Postgres</h4>
+        <p><strong>Situation.</strong> About 1,113 execute call sites and 1,560 tests written against sqlite's contract: question-mark placeholders, rows that answer by name and by position, a last-row id after insert, and the implicit transaction model where the first write opens a transaction.</p>
+        <p><strong>Choice.</strong> One choke point translates the dialect (placeholders, JSON extraction with integer casts for the known keys, the one measured GLOB shape, booleans as integers, RETURNING id appended on identity tables) and reproduces the transaction model: reads run autocommit, the first write issues BEGIN. Timestamps stayed text, money stayed as it was, booleans stayed integers, and the database was created with C collation so string-compared dates keep byte order.</p>
+        <p><strong>Cost.</strong> A permanent compatibility layer that is the hottest file in the repository, and a set of deliberate non-translations that fail loudly rather than return something plausible. The "right" long-term types are deferred to later migrations.</p>
+        <p><strong>Bought.</strong> No per-site edits across a thousand call sites; reads immune to the idle-in-transaction timeout because they never open one; nothing that sorts a string changed meaning on cutover night.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 3 and 4 September 2026</span>
+        <h4>Migrations are appended, generated, and must reapply on Postgres</h4>
+        <p><strong>Situation.</strong> Every schema change is a new numbered migration and a Postgres baseline is generated from the same source, with CI failing on drift. Then the deploy that carried schema 130 (3 September) caused a two-minute partial outage: column-adding migrations had silently done nothing on Postgres since the July cutover (a sqlite-only probe raised, the aborted transaction swallowed the fallback, the step was recorded as applied), and 130 was the first to add columns and read them at once. The next day release 999 crash-looped on a sqlite keyword executed verbatim. Doors kept opening throughout, because Bluetooth is local.</p>
+        <p><strong>Choice.</strong> Idempotent column adds, a white-box test of the Postgres path, and a new test class: reapply every migration on Postgres from the previous version, plus a source scan that fails on the sqlite leg where such bugs are written. Migration numbers cannot be reserved; the next build takes the next free one.</p>
+        <p><strong>Cost.</strong> A template rebuild in the test legs on every bump. 32 migrations in September alone, 130 to 162.</p>
+        <p><strong>Bought.</strong> The one path no test leg covered, a runtime migration against live Postgres, now has one.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; three engines</div>
+        <h4>The suite runs three times</h4>
+        <p><strong>Situation.</strong> A suite green on sqlite validates a dialect nobody deploys.</p>
+        <p><strong>Choice.</strong> The same suite on sqlite (the fast leg), on a throwaway Postgres 16 in Docker with a template database cloned per test (about 19 ms to create, 8 ms to drop, tmpfs, fsync off), and through the literal production stack: pool plus per-request lease. Transaction-rollback isolation was disqualified because it fakes commit semantics, the exact class under test.</p>
+        <p><strong>Cost.</strong> CI is opt-in (a marker in the commit message) because the three legs take 35 to 45 minutes. The plan to kill the sqlite leg never happened; it stayed as the fast one.</p>
+        <p><strong>Bought.</strong> 325 files and 6,058 tests. A change that passes only on sqlite cannot ship; the last full run through the production stack, at release 1142 on 19 September 2026, was 5,873 passed, 99 skipped, 0 failed.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 24 July 2026</span>
+        <h4>Commit attempts are counted before the COMMIT is sent</h4>
+        <p><strong>Situation.</strong> A teacher save returned 200 while the write was already gone: the old shim had reconnected mid-request and discarded the uncommitted transaction. Retries on transient errors could also re-run a handler that had already committed.</p>
+        <p><strong>Choice.</strong> The per-request lease increments its attempt counter before COMMIT goes on the wire, and both retry gates refuse any request whose counter is non-zero. A commit that passes its own deadline is a fault class of its own, "the write may have landed", never retried, and the user is told "may have been saved" rather than the engraved "not saved".</p>
+        <p><strong>Cost.</strong> Some genuinely retryable failures are shown to a person instead of healed.</p>
+        <p><strong>Bought.</strong> A money write can never be applied twice by the retry machinery. "Did anything double-apply?" is one query against the fault log.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; 8 July 2026</div>
+        <h4>Two always-on machines, one process each, a lock for the leader</h4>
+        <p><strong>Situation.</strong> One machine, a June out-of-memory event, and background loops that would fire twice on two machines: duplicate cards, duplicate emails. The old answer was a lease in a config table with a 120-second TTL, which is clock comparison across machines.</p>
+        <p><strong>Choice.</strong> Two machines, always on, 2 GB each, one uvicorn process and one pool per machine, and a Postgres session advisory lock on a dedicated non-pool connection (pool recycling would silently drop it) with TCP keepalives, so a crashed leader is noticed in 60 to 90 seconds and a clean deploy hands over instantly. Any error on the ping means "not leader this tick", because skipping a tick is strictly safer than two machines doing the work.</p>
+        <p><strong>Cost.</strong> Two machines' rent, and a connection budget of 20 per app against a 100-connection cluster.</p>
+        <p><strong>Bought.</strong> Split-brain is structurally impossible and there is no clock to compare.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 7 September 2026</span>
+        <h4>A nine-second watchdog the school owns</h4>
+        <p><strong>Situation.</strong> Five requests each held a pooled connection for exactly 600 seconds on a healthy pool (size 9, available 8, waiting 0). Not exhaustion, not the server, not a dead socket: a 10-second TCP user timeout was deployed and the next hang came 34 minutes later with the peer still acknowledging. Nothing below the application could bound it.</p>
+        <p><strong>Choice.</strong> One daemon thread per process, waking four times a second, claiming any call past its deadline, cancelling on the server, then shutting the socket down so the blocked caller returns in milliseconds (close alone: 7 ms, or blocked past 8 s when the descriptor was reused; shutdown then close: 1 ms every time). Deadlines per kind: 9.0 s for a query, 12.0 s for a commit, 3.0 s for a pool checkout so a door can never be pushed past its 20-second window. A COMMIT is never cancelled. Every fault lands in a durable row naming its class, the route, the elapsed time and the pool gauges.</p>
+        <p><strong>Cost.</strong> One more thread and a registry of in-flight calls on every pooled connection; no retry, no override, by design.</p>
+        <p><strong>Bought.</strong> The worst fault fell from 600,106 ms to 9,339 ms, and it is diagnosable afterwards.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 8 to 18 September 2026</span>
+        <h4>The stall loop, and the verdict "size was not the cause"</h4>
+        <p><strong>Situation.</strong> With hangs capped at 9 seconds they still came about eight times a day, always on the two largest reads (about 1.3 MB of JSON). A ticket went to the hosting vendor. The shared theory was payload size, so both reads were rewritten into 50-row server-cursor batches of about 53 KB.</p>
+        <p><strong>Choice.</strong> A standalone loop outside the application on one machine: the old large read every 2 seconds under a 9-second deadline and, on a stall, a bare TCP connect, a fresh-connection activity snapshot, a full driver connect, a cancel and a socket shutdown, each timed, with a rolling header-only packet capture (2-minute files, twenty kept).</p>
+        <p><strong>Finding.</strong> The stalls continued on small responses. The first capture showed a 545 KB reply fully delivered and acknowledged within 0.67 s, the receive queue empty, and the shutdown returning all 782 rows with no error: the tail of the last 16 KB TLS record sat decrypted inside the TLS library while the driver polled an empty socket. A known client-library defect, fixed upstream on 13 August 2026.</p>
+        <p><strong>Cost.</strong> Ten days, three replies to the vendor, two throwaway scripts, and a batching rewrite that was not the cure (kept anyway: every round trip now sits under the watchdog). <strong>Bought.</strong> A one-line driver bump, libpq 18.0 to 18.6, deployed on 18 September. The vendor's 660 ms pause was innocent.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; 16 September 2026</div>
+        <h4>Polling, not push</h4>
+        <p><strong>Situation.</strong> The spring planning record chose a poll over WebSockets: small dataset, no extra infrastructure. Then a placement made on one laptop did not show on another open page until reload. The owner: "things should load instantly, I don't want to have to refresh".</p>
+        <p><strong>Choice.</strong> One shared hook that refetches on window focus, on the tab becoming visible, and every 20 to 30 seconds while visible; paused while a modal, an inline editor or an unsaved draft owns the screen; every load carries a sequence number so a stale answer never paints over a newer one. Rolled out to twelve more pages in one sweep, and deliberately left off the doors page (Rule 0), stats, catalogue and rates.</p>
+        <p><strong>Cost.</strong> A tick per open tab, which forced the polled reads to be cheap the same evening: an index turned a 314 ms list into 24 ms, a 1.6 MB tick into 240 KB, and a full-table scoreboard read into one query at 19 to 24 ms.</p>
+        <p><strong>Bought.</strong> No socket infrastructure. Server push stays on the list "if the tick ever feels slow".</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; role fences</div>
+        <h4>Fences in middleware, chunks split by role</h4>
+        <p><strong>Situation.</strong> Roles were partly enforced by display-name checks scattered through routers and the sidebar, with "keep in sync" comments in both, and prefix matching that a longer path could widen.</p>
+        <p><strong>Choice.</strong> Three middlewares registered narrowest-outermost: writes blocked for the viewer and web-manager roles, the rentals and web-manager roles each locked to an allow-list matched on path segments rather than prefixes. Name gates replaced by role gates; the last two name lists hoisted into one constants file that both the router and the sidebar import. The front end is code-split on role, not on file size: admin-only and office-only pages load lazily so a rentals, chaser or secretary login never downloads them. 13 of 27 pages are lazy.</p>
+        <p><strong>Cost.</strong> 235 role dependencies to keep honest. A test asks the running application for every route under the debit prefixes and compares each live gate against one written table, proven by adding an ungated route and watching it caught.</p>
+        <p><strong>Bought.</strong> A rename or a second admin cannot silently escape a gate.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 3 September 2026</span>
+        <h4>Login codes live in the database, not in a process</h4>
+        <p><strong>Situation.</strong> The one-time code for the phone app lived in a process-local dictionary. With two always-on machines and no session affinity, roughly half of every login had failed since July, for 252 accounts. It hid for two months because sessions last 120 days.</p>
+        <p><strong>Choice.</strong> A durable store keyed by an HMAC of the code (the code itself is never stored, so nobody can answer "just tell me the code"), attempts persisted too, commit before the email is sent. A test refuses to let any module-level dictionary hold login state.</p>
+        <p><strong>Cost.</strong> One table and one test. <strong>Bought.</strong> Either machine can answer a login, which is part of access and therefore part of Rule 0.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; Rule 0</div>
+        <h4>Own door controllers instead of a bought access product</h4>
+        <p><strong>Situation.</strong> A third-party building-access app was in use on all four locations, link-only, with no API. A commercial smart lock was brainstormed twice and never reached code.</p>
+        <p><strong>Choice.</strong> An ESP32 board in parallel with each door's strike, a phone app that authenticates to the board over Bluetooth, and a reverse channel in which each board polls the panel every 3 seconds with its firmware version, radio state and buffered unlock events. The doors never ask the panel before opening. Filing a room booking grants the door itself, 30 minutes either side of the slot, stored in UTC after a summer-time lockout in July.</p>
+        <p><strong>Cost.</strong> Hardware, firmware and an app to maintain, and an accepted risk: rotating the door secrets means reflashing every board and an app release.</p>
+        <p><strong>Bought.</strong> Access that works with the internet down, no vendor between a teacher and a door, and about 60 EUR a month. The third-party app was retired on 9 September 2026.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 3 September 2026</span>
+        <h4>Bluetooth before Wi-Fi, a bounded wait, never a reboot on failure</h4>
+        <p><strong>Situation.</strong> The firmware surveyed access points, waited 30 seconds for Wi-Fi and rebooted on failure, forever, with Bluetooth initialised only after that block. A router outage meant the radio never came up: one door sat green in the panel all day and opened for nobody, and the reboot loop pulsed the strike every 30 seconds at night. The owner, after two days locked out: there is no way that functionality should ever break.</p>
+        <p><strong>Choice.</strong> Firmware 1.2.1: Bluetooth first, a Wi-Fi wait bounded at about 15 seconds, then carry on without a network and retry in the background with a backoff from 5 to 60 seconds (12 scans an hour instead of 720, because the two radios share one chip). Six reviewers found the first draft would have made it worse: advertising during a connection lets links accumulate and the stack refuses to advertise at its ceiling, so three leaked links take a door dark. The phone-side root cause was one line: the app's failure path never closed its link.</p>
+        <p><strong>Cost.</strong> A site visit per door, on 6 September. <strong>Bought.</strong> "Reachable" and "can open" became two separately measured facts.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; 7 September 2026</div>
+        <h4>Doors that update themselves, with a rollback nobody has to watch</h4>
+        <p><strong>Situation.</strong> Firmware 1.2.1 can only be updated from inside the building. An update is a site visit per door.</p>
+        <p><strong>Choice.</strong> Firmware 1.3.0: on its ordinary poll a door asks for a new image, downloads it slowly enough to leave the radio free, checks a signature, a hash and an identity marker baked into the image, installs only when idle (relay off, no phone connected, 30 seconds since the last Bluetooth activity), and on the next boot must prove itself within 20 seconds or the bootloader puts the old image back.</p>
+        <p>Two flash slots make that possible: about 1,341,500 bytes per image, 68% of a 1,966,080-byte slot. The build script refuses an image whose version, key, identity marker or Bluetooth service no longer match; the flashing script asks the door which door it is. Nothing about how a door opens changed: that code is byte for byte 1.2.1.</p>
+        <p><strong>Cost.</strong> One last trip with a cable, because 1.2.1 cannot install 1.3.0 by itself. The panel side is deployed and the images are built; the bench board goes first.</p>
+        <p><strong>Bought.</strong> After that trip, every update is a button in the panel.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; 14 August 2026</div>
+        <h4>Native forms with a journal, instead of a form vendor</h4>
+        <p><strong>Situation.</strong> Twelve rented forms in use, 39 in the account. Signups arrived as emails, a script wrote them to a sheet hourly, a 60-second sync imported the sheet. The account held about 2,579 submissions against a plan cap of 500, over-limit accounts get disabled, and about 880 signed direct-debit and rental PDFs were chargeback evidence, so the archive export was the real deadline.</p>
+        <p><strong>Choice.</strong> A native registration form on the school's own site posting to the panel through a guard stack cloned layer for layer from the pack signup (kill switch, body cap, durable lockout, valves, a captcha that fails closed, honeypot and dwell, 24-hour dedup); the sensitive forms served by the panel itself; everything else archived to object storage (39 forms, 7,469 submissions, 1,425 PDFs) and retired. One journal table records one row per submission inside the same transaction as the domain write; a journal failure fails the submission. The payload is whitelist-built and never carries bank details, identity documents, addresses or network fingerprints. Dropdowns submit catalogue codes, not price strings.</p>
+        <p><strong>Cost.</strong> Seven to nine development days in a two-week window, and one lesson recorded on 18 September: an import is not done until its journal row exists.</p>
+        <p><strong>Bought.</strong> No third party between a customer and the panel, prices from one source, and about 42 EUR a month.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 5 September 2026</span>
+        <h4>A run is a row, membership is computed, only the stamp freezes</h4>
+        <p><strong>Situation.</strong> Monthly direct-debit runs were prepared in a spreadsheet as a dated copy of the whole master tab per run, so "what did we charge this family in March" meant opening one of 345 tabs.</p>
+        <p><strong>Choice.</strong> A run is a row. Which orders land in it is computed on every read from each order's charge day (or a one-month override), so a chip is always the truth about what would be charged right now. The stamp freezes the lines into run items with a snapshot of the whole book, bound to the hash of the preview a human actually read; the bank file is generated from what was agreed.</p>
+        <p>The scar: the first run created after earlier runs had closed showed 182 rows when 43 orders were due that day, because 129 earlier orders had fallen forward (121 of them already charged) and 28 later ones had fallen backward up to 23 days early. Both sweeps are gone: charging late is a delay the school absorbs, charging early takes money on a day nobody agreed to. A run only ever moves forward on its ladder (open, stamped, sent, booked) by compare-and-set, after a review found two tabs could race one run into "cancelled" over "sent".</p>
+        <p><strong>Cost.</strong> Sixteen days from "a run is a row" to the secretaries running the page; two September runs prepared in parallel with the hand method and compared field by field.</p>
+        <p><strong>Bought.</strong> 360 historical runs since 2019 imported, so the March question is one query, and a bank file whose exact bytes are pinned by a golden test.</p>
+      </div>
+
+      <div class="scar">
+        <span class="sk">scar &middot; 10 September 2026</span>
+        <h4>Mandate numbers are allocated by the panel</h4>
+        <p><strong>Situation.</strong> The mandate series was allocated by scanning the master sheet for the highest number. A signup wrote the sheet first and created the panel row after, and a sheet-side trigger and the panel both allocating "highest plus one" was a duplicate race no lock inside the app could prevent. When the owner protected the master tab on 8 September, every push failed and three people who had signed a direct debit sat where no run would look.</p>
+        <p><strong>Choice.</strong> Allocate from the panel's own series, the maximum across the three tables a number can be stamped on, under the same app-wide advisory lock. Google is off the path. A second signature for an account that already holds an active order adopts that order, reuses the number and audits the re-signature once; an inactive row is never adopted.</p>
+        <p><strong>Cost.</strong> Five tests asserting sheet failure modes deleted rather than rewritten; the sheet-bridging code carries dated delete notices.</p>
+        <p><strong>Bought.</strong> The retirement of the master sheet, while the one pipe that feeds the scheduling tool survives on purpose.</p>
+      </div>
+
+      <div class="card">
+        <div class="kt">decision &middot; 19 September 2026</div>
+        <h4>Rental money: three sides of a row, and questions instead of guesses</h4>
+        <p><strong>Situation.</strong> The instrument-rental sheet writes deposits, extras and sales beside the rent cell while the bank books one amount; read as money, a month shows far more paid than due. 118 contracts were anchored to debit runs only, 104 to the card processor only, 21 to neither, and ten mandate numbers belonged to a different person in the sheet.</p>
+        <p><strong>Choice.</strong> Every ledger row sits on exactly one side: arrived (payment, bounce, refund, failed attempt, signed so "what came in" is one addition), due components (deposit taken, extra, sale), or beside the month (deposit returned, adjustment, insurance). Whatever was charged is what was due; nothing recomputes a proration.</p>
+        <p>A sheet row that collides with a ledger payment within 14 days, or a same-amount payment 15 to 35 days later, is not written: one review question is raised, refreshed rather than duplicated on re-run, and signed by its writer so a sweep never closes another writer's question. A mandate with no contract is reported and never written. Debit orders gained a kind, school or instrument, with every school-only lookup scoped, because one bank account can pay both.</p>
+        <p><strong>Cost.</strong> Four review rounds and 26 findings on one importer, whose 147 candidate rows became 4 written payments.</p>
+        <p><strong>Bought.</strong> 1,208 of 1,212 debit payments matched to a sheet row, so the sheet hides almost no money the panel lacks, and about 1,000 open questions that are real questions.</p>
+      </div>
+
+    </div>
+
+    <div class="call"><p>Every one of these follows the same line: <span class="tq">refuse to guess where guessing moves money or opens a door</span>, and where the system must be wrong, be wrong in the direction a person will notice.</p></div>
+  </div>
+</section>
+
+<!-- ============ BOUGHT, RENTED, BUILT ============ -->
+<section class="sec" id="buy">
+  <div class="inner">
+    <p class="ey"><s></s> Bought, rented, built <b>&mdash;</b></p>
+    <h2>Bought, rented, built</h2>
+    <p class="lead">What the platform rents, what it owns, and why each item sits on the side it does. Each entry says what the thing does, why it is on that side, and what it replaced. Vendor costs are the school's own; nothing here is a customer amount. Items the record does not settle are left out rather than guessed.</p>
+
+    <div class="split buy">
+      <div>
+        <h3>Rented</h3>
+        <div class="grid" style="margin-top:1rem">
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>hosting</div><h4>Fly.io</h4>
+            <p>Two always-on shared-CPU machines, 1 vCPU / 2 GB, one EU region, no volumes; a health check every 10 s with a 5 s timeout; restart on failure, ten times.</p>
+            <p><strong>Why rented.</strong> Memory was doubled in July 2026 to take out-of-memory off the table; a second machine has run since 8 July so one wedged machine is not an outage; the region moved on 30 July to sit beside the database, because two known N+1 pages need in-region round trips (about 2,400 sequential reads on one lane).</p>
+            <p><strong>Replaced.</strong> Free community hosting of the dead first version.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>database</div><h4>Fly Managed Postgres</h4>
+            <p>PostgreSQL 16.14, 100 connections, UTC: the one production database since 31 July 2026, at schema 162.</p>
+            <p><strong>Why rented.</strong> The previous embedded-replica database wedged overnight and crashed; a watchdog and a self-healing shim were built around it and then deleted. The record argues co-location, not managed-versus-self-run.</p>
+            <p><strong>Replaced.</strong> That database, retired on 14 August 2026; before it, sqlite in the first version.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>files</div><h4>Tigris (S3-compatible)</h4>
+            <p>Chaser PDFs, task files, the encrypted archive of every generated bank file and the bank's confirmation PDF per run, the nightly dump, and the 647 MB archive of the retired form vendor.</p>
+            <p><strong>Why rented.</strong> A per-machine volume pinned that machine to a region and the other machine could not see it.</p>
+            <p><strong>Replaced.</strong> A volume, dropped on 30 July 2026.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>payments</div><h4>Stripe, two accounts</h4>
+            <p>Hourly rooms, packs as subscriptions, refunds, rental agreements, gift vouchers, registration fees. Webhooks land in the panel; a daily read-only reconciliation compares paid sessions against booking rows over a 7-day window and refuses a false all-clear.</p>
+            <p><strong>Why two.</strong> One account is the rehearsal-room business and is shared with the two web shops; the other is the school. Each is blind to the other's sessions, so every webhook is scoped by a metadata marker and the rule is "never consolidate".</p>
+            <p><strong>Replaced.</strong> The form vendor's payment forms and its response sheet as the record.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>google</div><h4>Sheets, Gmail, Contacts, Apps Script</h4>
+            <p>One token, five scopes, none of them calendar. Sheets is still the bridge to everything not yet in the panel: the intake sheet, the payments mirror, the secretary's run sheet and the payments source-of-truth sheet (both now written by the panel), the instrument-rental sheets the reconciliation reads. Gmail sends every email, mostly as drafts a human reviews. Two importers run on Google's own scheduler.</p>
+            <p><strong>Why rented.</strong> The school already lives in that inbox, and the bank-side and scheduling-side pipes consume sheets. Turned off where the panel took over: the master debit sheet (8 September 2026) and the pack signup sheet (10 August).</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>app builds</div><h4>Expo EAS, Google Play, App Store</h4>
+            <p>Builds, signing and submission for an Expo SDK 54 / React Native 0.81.5 app; store submissions are the owner's decision only.</p>
+            <p><strong>Why rented.</strong> The native build pipeline is rented rather than maintaining Xcode and Gradle by hand. Trap recorded: a store version code is burned on upload and never reused.</p>
+            <p><strong>Replaced.</strong> Nothing directly; the app itself replaced the door product and the rented booking form.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>code and pages</div><h4>GitHub</h4>
+            <p>Four repositories; Pages for the frozen static forms site and for this map, each behind its own domain; Actions for the three-leg suite (opt-in, 35 to 45 minutes), a stability watch every 30 minutes sized to the free plan's 2,000 metered minutes, and a type-check on app pushes. Paused since 18 September; releases since then rely on the local three-leg runs.</p>
+            <p><strong>Why rented.</strong> Free static hosting for pages with no secrets, and CI as the enforced gate for schema drift and the three database legs.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>paging</div><h4>Better Stack</h4>
+            <p>An external monitor on the health route (3-minute checks, a phone alert after about 3 minutes down) since 9 June 2026, and a log-shipper app because platform logs vanish within about 12 hours.</p>
+            <p><strong>Why rented.</strong> It costs nothing and removes the laptop and GitHub from the alert path.</p>
+            <p><strong>Replaced.</strong> Nothing; the log shipper was added after the July outage review as "reliability engineering is standard, not optional".</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>edge</div><h4>Cloudflare</h4>
+            <p>One Worker creates checkout sessions for the website's booking form: it holds the payment key, relays the panel's quote and never prices anything. Turnstile guards every public form that writes to the panel. One of the two 20-second uptime probers runs here on the free tier; the other runs from a second vantage point.</p>
+            <p><strong>Why rented.</strong> A static page cannot hold a secret; the paid monitor's free plan floors at 3 minutes. Since app 1.8.0 the app mints its own sessions through the authenticated API and no longer uses the Worker.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>scheduling</div><h4>MyMusicStaff, kept</h4>
+            <p>Lesson scheduling, attendance, the family balance and lesson billing. No API; one Zapier pipe is its only automation.</p>
+            <p><strong>Why still rented.</strong> The money-movement layer had to exist first; switching it off before the panel owned collection would leave every payment channel without a target. Taken from it so far: mandates and monthly runs, pack tracking, teacher availability, the conduct appendix, the account ledger for rooms and packs.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>glue</div><h4>Zapier, one pipe</h4>
+            <p>A new row on the payments sheet becomes a payment in the scheduling tool. The sheet's 10-column format is a frozen contract; the panel appends exactly once per run with sheet-side idempotency so the zap never double-fires.</p>
+            <p><strong>Why still rented.</strong> It leaves with the scheduling tool. The pack-tracking zaps were retired when packs moved into the app.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>the bank</div><h4>The bank's web portal</h4>
+            <p>The panel generates the file (five columns, UTF-8 with a byte-order mark, CRLF, decimal comma, minimal quoting) and the owner uploads it by hand, then uploads the confirmation PDF, which is archived with the encrypted file. Results and bounces come back through sheets and the importers.</p>
+            <p><strong>Why rented.</strong> The owner's end state: "the bank consumes a sheet, and that format stays". No XML generation and no bank API anywhere. Bank details are AES-256-GCM encrypted with the row's identity bound in; no plaintext account number in Postgres.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>websites</div><h4>WordPress on Kinsta, WooCommerce</h4>
+            <p>The school site and the rehearsal-room site; two shops share the room-rentals payment account and their prices are mirrored by hand into the panel's express-rental catalogue.</p>
+            <p><strong>Why rented.</strong> It was already there; the May 2026 move was a hosting change, not a platform change. Deploys by manual dispatch only, four paths, staging untouchable. Two in-house plugins ride on it.</p>
+            <p><strong>Replaced.</strong> The form vendor's embeds on both sites.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>ai</div><h4>Anthropic API</h4>
+            <p>Three call sites: extracting pack screenshots, reading rental-task PDFs, classifying bank-import rows. Uploads are capped mid-stream so an oversized file cannot run up a bill.</p>
+            <p><strong>Why rented.</strong> Classification and extraction, nothing else. Not in the door path, the app, the forms or any money write.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--sky)"></span>routing, domains</div><h4>HERE, the national fuel feed, Namecheap</h4>
+            <p>Routing, tolls and live diesel for the delivery calculator; a 30-minute loop caches the price because the regulator intermittently blocks the host's egress. The school domain's registrar and DNS; this map and the forms site are records the owner created there.</p></div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Built</h3>
+        <div class="grid" style="margin-top:1rem">
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--amber)"></span>doors</div><h4>Firmware and over-the-air updates</h4>
+            <p>An ESP32 board on each of three doors plus a bench board; 1.2.1 in the field, 1.3.0 self-updating built. Arduino toolchain, one sketch folder per door, a build script that refuses an image whose identity marker, version, key, Bluetooth name or service no longer match.</p>
+            <p><strong>Why built.</strong> Rule 0: the door must open with the internet down and never depend on a vendor. The poll handler is fail-open by design.</p>
+            <p><strong>Replaced.</strong> The third-party door product, about 60 EUR a month, retired 9 September 2026.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>the panel</div><h4>Backend and office UI</h4>
+            <p>FastAPI on Python 3.12: 60 routers, 536 endpoints, about 80 service modules. React 19 / Vite 7 / Tailwind 4: 27 pages, no state library by design, six view personas, copy in Spanish and English. Nine modules of the first version are copied into the image at deploy time and are live production code.</p>
+            <p><strong>Why built.</strong> The spring 2026 record: lifecycle events stuck in spreadsheets, a dashboard that did not scale, and a target of about 4,460 EUR a year in retired vendors.</p>
+            <p><strong>Replaced.</strong> The first-version dashboard, several working spreadsheets, and piece by piece the vendors opposite.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>forms</div><h4>Native forms and the journal</h4>
+            <p>Registration and vouchers (a plugin on the school site), the debit mandate and the rental agreement (served by the panel with their own CSP), combos interest, pack signup and booking, teacher availability. Captcha, honeypot, dwell, valves, kill switch, dedup. One journal table; an import is done when its journal row exists.</p>
+            <p><strong>Why built.</strong> The vendor's quota (one form died over quota on 27 August 2026), a free-text field that had collected card numbers, and the wish for the panel to be the record.</p>
+            <p><strong>Replaced.</strong> 39 rented forms (twelve in daily use), about 42 EUR a month.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>direct debit</div><h4>Runs, the bank file, the mandate series</h4>
+            <p>Encrypted bank details and fingerprints, monthly runs frozen at the stamp with a whole-book snapshot, the bank CSV pinned by a golden-byte test, 360 historical runs since 2019, mandate numbers allocated by the panel since 10 September, a second population for instrument rentals since 19 September. A publisher writes the secretary's dated tab and the one append that triggers the scheduling-tool pipe.</p>
+            <p><strong>Why built.</strong> The approved 28 August design: three architect passes and an adversarial critique. The first run born in the panel went to the bank on 5 September and matched.</p>
+            <p><strong>Replaced.</strong> The master sheet's run tabs and two scripts, retired 8 September.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>chasing</div><h4>The debt chaser</h4>
+            <p>An eight-step ladder per debt, comment threads, invoice drafts with a generated PDF in object storage, WhatsApp links, a preview-then-commit import of pending payments, a nightly job that creates exam-fee debts. Pack prices read from the catalogue since 16 September.</p>
+            <p><strong>Why built.</strong> The chase lived in emails and a sheet; the ladder makes the next action explicit.</p>
+            <p><strong>Replaced.</strong> A sheet-driven chase.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>rooms</div><h4>Booking, packs and the door key flow</h4>
+            <p>Website and app bookings land in one row shape through one webhook; filing grants the door 30 minutes either side of the slot, in UTC; packs run as a debit order or a card subscription with sessions materialised per month; a cancel more than 48 hours ahead refunds itself; teacher pricing is decided from the role on every request; prices reach the sites through two public feeds with 10-minute caches and 30-day last-good fallbacks.</p>
+            <p><strong>Why built.</strong> One record for every booking regardless of channel, and the door grant follows the booking so nobody hands out keys.</p>
+            <p><strong>Replaced.</strong> The rented booking form (July 2026), the door product, a sheets-and-glue pack tracker.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>rental contracts</div><h4>The agreement composer</h4>
+            <p>Since 15 September the rentals role composes the lines (catalogue instruments with tier and coverage, manual lines, conditions the client cannot edit), saving mints a single-use 30-day link, and the client sees a locked table and supplies payment, ID photos, consent and signature. One pricing path serves every agreement.</p>
+            <p><strong>Why built.</strong> A blank public form produced wrong prices and re-typing.</p>
+            <p><strong>Replaced.</strong> A blank native form, itself the replacement for the rented agreement (352 archived submissions).</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>rental money</div><h4>The long-term ledger and its importers</h4>
+            <p>Since 20 September: every payment and bounce by channel, four report-first idempotent importers keyed by source, a review queue of typed questions, a client history with settlement, an overview beside the month view, and statistics. On go-live about 2,400 ledger rows, about 4,100 contract-months reconciled (about 3,500 of them OK), about 1,000 open questions.</p>
+            <p><strong>Why built.</strong> The owner's rules: whatever was charged is what was due; a month is paid, failed or not recorded and never two states; the sheet is master for contracts "until it falls apart". The first importer's review showed "the GO tab means it went to the bank" was false, which is why every importer reports before it applies.</p>
+            <p><strong>Replaced.</strong> The billing sheet's comments as the only history, and hand reconciliation against the card processor.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--amber)"></span>the app</div><h4>Doors, bookings, a teacher side</h4>
+            <p>Expo / React Native: doors over Bluetooth, hourly and pack booking with its own checkout since 1.8.0, my bookings with cancel and reschedule, a teacher side (availability painter, combos, instruments and skills, proposing a student), five languages with 637 keys enforced before any build. Versions 1.6.0 to 1.8.3 shipped between 6 and 14 September.</p>
+            <p><strong>Why built.</strong> Rule 0: the door path is never a ride-along change and is tested on a real door with the build users install.</p>
+            <p><strong>Replaced.</strong> The door product and the rented booking form.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>teachers</div><h4>Onboarding and conduct signing</h4>
+            <p>An eight-step card created atomically with the teacher; a versioned code of conduct (twelve sections, four appendices), one signature bound to a hash of the exact bytes on screen; documents typed by magic bytes and stripped of location data, readable only by the owner's own login with an audit row first.</p>
+            <p><strong>Why built.</strong> The old form asked for a signature on five pages and was never finished; the owner wanted the rules contractual and a checklist that drives the office to the next action.</p>
+            <p><strong>Replaced.</strong> An unfinished rented form and paper PDFs from 2017 and 2021.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>reliability</div><h4>The tooling around the database</h4>
+            <p>Advisory-lock leader election, a per-request lease, the 9-second watchdog, a fault log with an activity snapshot, a nightly in-app dump with a verify gate and an age on the health route, a generated baseline with a drift check, a constraints file pinning every transitive dependency after an unannounced framework major slipped through, and a stall loop that runs outside the app.</p>
+            <p><strong>Why built.</strong> Each piece is the answer to one recorded incident, listed in the decision log above.</p></div>
+          <div class="card"><div class="kt"><span class="pip" style="background:var(--teal)"></span>plumbing</div><h4>The small pieces</h4>
+            <p>Two WordPress plugins (catalogue prices overlaid on the site's tables at render time, purging the host's caches on change, with one option that restores the typed values byte for byte; native forms carrying no secrets), the checkout Worker, two Apps Script importers, a listener that reads one WhatsApp bug-report group into the task board, and this page.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call"><p>The line that decides it: <span class="tq">the door must never depend on a vendor</span>, so the controllers, the firmware and the app are owned. <span class="tq">Money must be auditable in-house</span>, so the ledger, the runs, the bank file and every importer are owned, and every money write leaves a row. Everything else is rented while it is cheaper to rent: the database, object storage, email, sheets as the bridge to the bank and to the scheduling tool, app signing, captcha and paging.</p>
+      <p>The line has moved in one direction only: booking off the form vendor in July, pack tracking off the glue in August, registration, mandates, vouchers and rental agreements off the form vendor in August, then in September the master debit sheet and the mandate numbers into the panel, the door product off, and instrument-rental money into the ledger. Still rented on purpose: the scheduling tool for lessons, the one pipe into it, and the bank's portal.</p></div>
   </div>
 </section>
 
@@ -1167,7 +1486,7 @@ footer b{color:var(--fg-dim);font-weight:500}
       <div class="card">
         <div class="kt"><span class="pip" style="background:var(--teal)"></span>contracts</div>
         <h4>Long-term rental</h4>
-        <p><strong>244 contracts across 3,709 billed months</strong> lifted out of a spreadsheet. The rule that makes it honest: a month is paid, failed, or <em>not recorded yet</em> &mdash; never two of those at once. Payments are appended as events, so a bounce can never erase a payment that happened.</p>
+        <p><strong>249 contracts across 4,140 reconciled months</strong> lifted out of a spreadsheet. The rule that makes it honest: a month is paid, failed, or <em>not recorded yet</em> &mdash; never two of those at once. Since 20 September 2026 every payment and bounce since 2023 sits in one ledger of signed integer cents (about 2,400 rows), each row keyed to its source and marked with how sure the importer was. A bounce can never erase a payment that happened, and a month that does not add up becomes a review question rather than a guess.</p>
       </div>
       <div class="card">
         <div class="kt"><span class="pip" style="background:var(--amber)"></span>field</div>
@@ -1196,9 +1515,9 @@ footer b{color:var(--fg-dim);font-weight:500}
       </div>
       <div class="row">
         <div class="who">Third-party door app</div>
-        <div class="what">The building-access app renters were told to install. Every customer-facing route now points at Shine's own app instead; a staff-only path remains until the last account is moved.</div>
+        <div class="what">The building-access app renters were told to install. Customer-facing routes moved to Shine's own app on 14 August 2026 and the last staff-only link was removed on 9 September 2026.</div>
         <div class="cost">~&euro;60 / month</div>
-        <span class="tag going">Nearly out</span>
+        <span class="tag off">Switched off</span>
       </div>
       <div class="row">
         <div class="who">Previous database</div>
@@ -1230,7 +1549,7 @@ footer b{color:var(--fg-dim);font-weight:500}
 </section>
 
 <!-- ============ NEXT ============ -->
-<section class="sec" id="next" style="border-bottom:none">
+<section class="sec" id="next">
   <div class="inner">
     <p class="ey"><s></s> Where it goes <b>11</b></p>
     <h2>The half that is not built yet</h2>
@@ -1251,6 +1570,7 @@ footer b{color:var(--fg-dim);font-weight:500}
         <div class="kt">one catalogue</div>
         <h4>Every instrument in one database</h4>
         <p>Rental and the shop currently keep separate ideas of what an instrument is. They become one record with one history: bought, listed, sold, or rented out, to whom and for how long. A serial number stops being three different rows in three different places.</p>
+        <p><strong>Partly there since 20 September 2026:</strong> the rental half moved first. Every long-term contract now has a ledger of its payments and bounces since 2023, a client history with settlement, an overview of every contract including the returned and sold ones, statistics by year, channel and instrument family, and a review queue that raises the months that do not reconcile. The shop's side of the catalogue is still ahead.</p>
       </div>
       <div class="fut">
         <div class="kt">the third shopfront</div>
@@ -1261,11 +1581,13 @@ footer b{color:var(--fg-dim);font-weight:500}
         <div class="kt">the app grows up</div>
         <h4>Lessons and rentals in your pocket</h4>
         <p>The app already opens doors and books rooms. Next it carries your lessons, your rental, your packs and your payments. The thing everyone installed to get through a door becomes the thing they manage everything in &mdash; which is exactly why access came first.</p>
+        <p><strong>Partly there since app 1.8.0 (12 September 2026):</strong> the app now carries monthly packs (a five-step signup, priced by the server) and a teacher side; lessons, the rental and payments are still to come.</p>
       </div>
       <div class="fut">
         <div class="kt">new kind of user</div>
         <h4>Teachers log in as themselves</h4>
         <p>Teachers get their own side: the students they actually teach, marking who turned up, their availability, and their own public profile. Today every one of those reaches the school through the office or a form, which means the school's picture of its own teaching is always slightly out of date.</p>
+        <p><strong>Partly there since September 2026:</strong> a teacher logs into the app as herself and paints her own availability, claims instruments and skills, keeps her combos and proposes a student; the code of conduct is signed on a personal link, and a new teacher is onboarded through an eight-step card. Attendance and the list of the students she teaches are still ahead.</p>
       </div>
       <div class="fut">
         <div class="kt">new kind of user</div>
@@ -1276,6 +1598,7 @@ footer b{color:var(--fg-dim);font-weight:500}
         <div class="kt">later</div>
         <h4>Noticing before a human does</h4>
         <p>Nightly rules that spot a student who quietly stopped coming, or a rental month nobody recorded, and raise it as a card with a drafted message &mdash; before the school bills someone for lessons that are not happening.</p>
+        <p><strong>Partly there since 20 September 2026:</strong> for rental months the reconcile sweep already raises one typed question per month that does not add up, and never asks a person twice. The student side is still a plan.</p>
       </div>
     </div>
 
@@ -1283,8 +1606,281 @@ footer b{color:var(--fg-dim);font-weight:500}
   </div>
 </section>
 
+<!-- ============ METHOD ============ -->
+<section class="sec" id="method">
+  <div class="inner">
+    <p class="ey"><s></s> How work ships <b>12</b></p>
+    <h2>How work gets discovered and shipped</h2>
+    <p class="lead">One owner, an office of a few people, and AI coding agents doing the building under written rules. The method is the same for a one-field change and for a four-slice feature, and it is written down because two assistants from different vendors share the repository and neither is allowed to guess. The worked example below is one 25-hour stretch, 19 to 20 September 2026: nine production releases, five of them one feature.</p>
+
+    <div class="flow">
+      <div class="st"><div class="n">spoken</div><h4>Brief</h4><small>Principles, verbatim where the wording matters.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st"><div class="n">read-only</div><h4>Reconnaissance</h4><small>Read production as it really is. Write nothing.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st"><div class="n">a page</div><h4>Findings</h4><small>Every table, in the browser, before code.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st"><div class="n">one page</div><h4>Plan and slices</h4><small>Refusal list at every step.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st"><div class="n">builders</div><h4>Build</h4><small>From a complete spec, no conversation.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st hub"><div class="n">refute</div><h4>Adversarial review</h4><small>Numbered findings, replayed on real data.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st"><div class="n">three legs</div><h4>Tests</h4><small>sqlite, Postgres, Postgres through the lease.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st acc"><div class="n">same minute</div><h4>Release</h4><small>One owner per release; both machines read back.</small></div>
+      <div class="ar">&rarr;</div>
+      <div class="st"><div class="n">written down</div><h4>Checkpoint</h4><small>Counts, verifications, what was not built.</small></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.6rem">
+      <div class="card">
+        <div class="kt">the brief</div>
+        <h4>Spoken, principled, short</h4>
+        <p>The owner states requirements as principles, usually out loud: at bedtime, in a voice session, or dictated while driving. Where the wording matters it is transcribed verbatim into the project memory and the wording becomes the spec; the debit permission split of 7 September is carried in a router docstring as the owner's exact words.</p>
+        <p>The rental reconciliation brief arrived in three pieces over one day: the outcome at bedtime (every payment and bounce, a client history, an overview, "propose the best view"); the rules while driving ("whatever we charged is what was due"; cash and transfer are under 2% of the money and trusted from the sheet); then deposits, sale arithmetic and a standing instruction: findings, plan, build, deploy, report, and ping when the findings are ready. Two corrections from the same week are rules now: the smallest change that makes the thing work, and check the archive before claiming data is missing.</p>
+      </div>
+      <div class="card">
+        <div class="kt">reconnaissance</div>
+        <h4>Read production, write nothing</h4>
+        <p>Nothing is built until the sources have been read as they really are. For the reconciliation: four independent reader agents, one source each (the billing sheet with its cell notes, the debit side, the card processor, the panel's own tables), every database read inside a transaction that is rolled back, the processor read with list calls only, 50 minutes, zero writes. A fifth pass built a month-by-month matrix.</p>
+        <p>What it found, in numbers: 252 real contracts and 30 empty shells; 2,388 contract-months, 391 not OK of which 217 real disagreements; ten mandate numbers that belonged to a different person in the sheet; 130 bounce rows over 57 mandates; three account numbers and one card number in free-text cells, masked in every file and listed for deletion. And that the panel's own month table was a copy of the sheet, not an independent source, so the report cites it but never decides by it.</p>
+      </div>
+      <div class="card">
+        <div class="kt">findings page</div>
+        <h4>A page in the browser before code</h4>
+        <p>The synthesis becomes a report in the repository and a page the owner reads on his phone. His spoken decisions answer the report's open questions, and only then is a plan written, listing "decisions needed from the owner before slice 1" by letter.</p>
+        <p>The plan is one page: what exists (verified read-only), the model (one new table, no schema churn elsewhere), reconciliation in order with a refusal list at each step, the UX, and the slices. Each slice is a spec by the planning model, a build by a builder, two adversarial reviews, the Postgres legs, a deploy.</p>
+      </div>
+      <div class="card">
+        <div class="kt">slices</div>
+        <h4>Small, ordered, and one that was not in the plan</h4>
+        <p>The reconciliation shipped as five: the ledger, review queue and importers (release 1142, 19 September 16:52); the debit sheet's own run tabs as a second source (1143, 01:18 the next morning, hardened in 1144 at 01:35); the client history; the overview; the statistics.</p>
+        <p>Slice 1b did not exist in the plan. Slice 1's production run left 474 months reading "unpaid", because the reconnaissance had found 177 collections that existed only in the debit sheet's tabs. The tab importer then proved those 177 were re-listings, crossed-out rows, space rentals and orphan mandates: the sheet hid almost no money, and the unpaid months became genuine questions rather than a missing import.</p>
+      </div>
+      <div class="card">
+        <div class="kt">importers</div>
+        <h4>Report first, apply on purpose</h4>
+        <p>Every importer is a thin command-line wrapper over the application's own service module, "so what this prints and what the app would do can never drift". A bare run writes nothing and prints every row it would touch; apply is "the version you type on purpose"; one transaction, and a single error row refuses the whole thing; every row carries a source key so a re-run recognises its own.</p>
+        <p>The refusals: a debit or processor month is never written from the sheet, because that is the same money twice; a sale price is never written, only asked; no secret on a command line; the account-number column is replaced with a stub the moment the response is unpacked; the card processor is read with GET only; never in CI, always against a local shadow first.</p>
+        <p>Thresholds are explicit constants: a bounce matches its payment within 45 days; a sheet row and a ledger row are one collection within 14 days; a run within 31 days before a contract's start books to the start month.</p>
+      </div>
+      <div class="card">
+        <div class="kt">review</div>
+        <h4>Adversarial, with the real data</h4>
+        <p>A build is never reviewed by its builder. Reviewers are separate agents with the spec, the diff and, where possible, the real data; their job is to refute, and each numbered finding is fixed or rejected with a reason.</p>
+        <p>The instrument-sheet importer's first version rested on "the GO tab is what went to the bank". The first reviewer replayed it against the real 296 tabs and showed the axiom false: one tab of 27 rows held 18 from one run and 3 from another. Four rounds and 26 findings later, 147 candidate rows became 4 written payments and 18 to 20 questions. The pages went through three rounds and 25 findings, including two card-processor object-id leaks caught before release. Elsewhere that week: 22 findings on the conduct signature, both reviews rejecting the first round of the debit rules. The first round rejects more often than not. That is the point of it.</p>
+      </div>
+      <div class="card">
+        <div class="kt">three engines</div>
+        <h4>The suite, three times, with the counts written down</h4>
+        <p>sqlite as the fast full run (5,875 passed at release 1143), a throwaway Postgres 16 with a template cloned per test, and Postgres through the production lease middleware. The counts go into every checkpoint: full lease legs of 5,456, 5,570 and 5,873 passed, 99 skipped, 0 failed across the worked example. The front end adds TypeScript, the Vite build, lint, and a vocabulary check that fails the build if a page label drifts from the service's three words for a ledger row.</p>
+        <p>Tests never touch a real service: outbound is denied in two layers after a suite once sent about 165 real emails to reserved example addresses. "A per-file stub fixture is not protection. Autouse or nothing." CI runs all three legs but is opt-in (35 to 45 minutes); on 19 and 20 September no CI ran, so every release relied on the local legs, recorded with counts.</p>
+      </div>
+      <div class="card">
+        <div class="kt">release</div>
+        <h4>The same-minute check and a read-only look at both machines</h4>
+        <p>Standing permission since May 2026: commit, push and deploy when green, run production writes the owner has described, then report; ask first for restarts, bulk deletes, store submissions, customer-facing emails and publishing. One assistant owns a release end to end and re-reads the hosting platform's release list in the same minute as the deploy, a rule that dates from 14 September, when the same runtime was deployed twice four minutes apart. A release with an unfinished slice in the tree ships from a clean worktree of the commit.</p>
+        <p>After deploy, on both machines: schema version, new tables and constraints, changed routes answering with the expected shape, health, and for a data change a dry simulation (a run dated 1 October takes 39 instrument rows, none unassigned). The stall loop outside the app dies with every deploy and is restarted after each.</p>
+      </div>
+      <div class="card">
+        <div class="kt">checkpoint and memory</div>
+        <h4>The record every session loads first</h4>
+        <p>A dense paragraph per release in the shared instructions file: release number, time, whether the schema changed, what shipped, which rules now live in which service, what was verified on both machines, test counts per leg, whether CI ran, who built and who reviewed, the production data result with counts, and a "not built" line. The file was 1,017 lines on 20 September.</p>
+        <p>Beside it: a session handoff with a constitution, a playbook and a history, written by a shared end-session command; and a project memory of topic files under an index kept below 150 lines (cleaned from 153 to 126 on 14 September), where the owner's corrections are recorded with the date and the words. The rule that ties them: update the document that owns a fact; never create a second memory.</p>
+      </div>
+      <div class="card">
+        <div class="kt">the estate file</div>
+        <h4>One file for any AI reading cold</h4>
+        <p>A single file at the repository root describes the five parts (the panel, the doors, the app, the websites and forms, the money spine), how they fit, how the estate is operated, the rules and the open items. Its rules section has ten entries, from Rule 0 to "verify claims against code, not memory". The instructions file points to it first.</p>
+        <p>An orientation audit by the second assistant on 13 September read the estate cold, ran 101 backend tests, 53 app helper tests, 61 firmware host checks and 194 catalogue checks, wrote two fault-injection tests, touched no runtime and no production data, and concluded "a rewrite is not indicated" with five verified open findings, each listed until proven resolved.</p>
+      </div>
+      <div class="card">
+        <div class="kt">who does what</div>
+        <h4>Judgement on one model, typing on another</h4>
+        <p>Since 11 September the planning model does the thinking, planning, review and verification; builder agents execute settled specs from a definition with the house rules baked in: stop on ambiguity, run the legs with counts, no commit, push or deploy, the final message is the report. A builder starts with none of the conversation, so a spec must be complete.</p>
+        <p>Anything where the next step depends on what the last one revealed stays on the planning model: production diagnosis, design that emerges during the work, money-adjacent decisions, the final check against the served artifact. It is a division of labour, not permission to fan out; the owner pushed back on twenty agents for five small changes. A second assistant from another vendor reads and writes the same instructions, handoff and memory; overlapping work goes to separate worktrees and neither reverts the other's unfinished changes.</p>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="lhead"><span class="pip" style="background:var(--teal)"></span><h3>The worked example, in numbers</h3>
+        <span class="lmeta">19 September 00:51 to 20 September 01:35</span></div>
+      <dl class="spec">
+        <div><dt>Releases</dt><dd><b>9</b> (1136 to 1144) in about 25 hours; schema 160 to 162</dd></div>
+        <div><dt>Reconnaissance</dt><dd>4 readers plus 1 synthesis &middot; 50 minutes &middot; <b>0 writes</b></dd></div>
+        <div><dt>Examined</dt><dd>252 real contracts, 30 shells &middot; 2,388 contract-months</dd></div>
+        <div><dt>Importers</dt><dd>4 command-line wrappers over 4 service modules, all report-first</dd></div>
+        <div><dt>Importer review</dt><dd>4 rounds, 26 findings &middot; 147 candidate rows to <b>4 written</b></dd></div>
+        <div><dt>Pages review</dt><dd>3 rounds, 25 findings &middot; 2 processor-id leaks caught before release</dd></div>
+        <div><dt>Ledger</dt><dd>2,409 rows after slice 1 &middot; 3,471 OK months &middot; 1,011 open questions &middot; then 1,208 of 1,212 debit payments matched to a sheet row</dd></div>
+        <div><dt>Live book</dt><dd>overview about 200 ms, statistics about 100 ms &middot; batched reads of 50 rows about 53 KB, responses under 65 KB</dd></div>
+        <div><dt>Full lease leg</dt><dd><b>5,873 passed</b> / 99 skipped / 0 failed at release 1142</dd></div>
+        <div><dt>Records</dt><dd>instructions file 1,017 lines &middot; memory index under 150 lines &middot; the feature's memory file updated 13 times in 25 hours</dd></div>
+      </dl>
+    </div>
+
+    <div class="call"><p>The method in one sentence: <span class="tq">read before building, report before applying, refute before shipping</span>, and write down the counts so the next session does not have to trust anyone's memory, including its own.</p></div>
+  </div>
+</section>
+
+<!-- ============ SINCE ============ -->
+<section class="sec since" id="since" style="border-bottom:none">
+  <div class="inner">
+    <p class="ey"><s></s> Since 3 September <b>13</b></p>
+    <h2>What changed between 3 and 20 September</h2>
+    <p class="lead">Seventeen days between the first publication of this page and this update. Grouped by theme, dated, with the numbers as the release record states them.</p>
+
+    <div class="hstats">
+      <span><b>295</b> commits on 18 days</span>
+      <span><b>~145</b> releases, 999 to 1144</span>
+      <span>schema <b>130 &rarr; 162</b></span>
+      <span>app <b>1.4.2 &rarr; 1.8.3</b></span>
+      <span>firmware <b>1.2.1</b> on the doors, <b>1.3.0</b> built</span>
+      <span>tests <b>~3,650 &rarr; 5,875</b></span>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.6rem">
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--amber)"></span>doors &middot; 1 to 9 September</div>
+        <h4>Firmware that fixes itself, and a panel that knows who opened what</h4>
+        <ul>
+          <li><b>1 Sep</b> One door sat green in the panel all day and opened for nobody. "Online" only meant "reaches the server"; the radio side was invisible.</li>
+          <li><b>3 Sep</b> Firmware 1.2.1 written: Bluetooth before Wi-Fi, no reboot on failure, a backoff from 5 to 60 seconds, advertising re-armed every 10 seconds. Schema 130 adds radio telemetry to the doors table, all nullable so an old door reads "unknown", never "fine", and "can open" as a fact separate from "reachable".</li>
+          <li><b>3 Sep</b> App 1.4.2 to 1.4.4: the door says why it did not open, in five languages, with a diagnostic line that identified a scan-start failure in seconds after two days of guessing; iPhones stop waiting 3 seconds on a local-network call they can never make. Submitted to both stores.</li>
+          <li><b>3 Sep</b> Login codes move out of process memory into a durable store keyed by an HMAC of the code. Half of logins had been failing across two machines since July.</li>
+          <li><b>6 Sep</b> All three doors on 1.2.1, flashed one at a time and verified by standing at each with a phone. App 1.6.0 and schema 139: who opened the door. The phone queues one report per unlock attempt (5-second deadline, at most 20 per flush) and the server matches it to the door's own event within 20 seconds, in its own transaction after the heartbeat has committed, so no SQL error can ever fail a door.</li>
+          <li><b>7 Sep</b> Firmware 1.3.0 and schema 143: self-update over the air with signature, hash and identity check, install only when idle, automatic rollback if the new image does not prove itself within 20 seconds; a firmware section per door in the panel. The version that enables remote updates cannot itself arrive remotely.</li>
+          <li><b>7 Sep</b> The door poll leaves the thread pool for its own capacity limiter off the event loop, with one checkout attempt instead of three at 5 s each. Measured: a poll that used to leave the machine unable to answer anything for 14.73 s now returns in 5.02 s with twenty probes answered throughout.</li>
+          <li><b>9 Sep</b> The third-party door product retired; its line came off the cost table and the handbook's ritual was rewritten around the school's own app.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>database reliability &middot; 5 to 18 September</div>
+        <h4>From ten-minute hangs to a one-line driver bump</h4>
+        <ul>
+          <li><b>5 Sep</b> Two independent 20-second probers from two vantage points, because the laptop watcher sampled every 10 minutes and the paid monitor's free plan floors at 3.</li>
+          <li><b>6 Sep</b> A probe that reads like a person: a student card's reads through the ordinary request path, counts only. The health route had stayed green through two afternoons of timeout toasts. The same afternoon's N+1 (one teacher lookup per contact) became one query.</li>
+          <li><b>7 Sep</b> Schema 141, a fault table: every fault with its real class, the route, the elapsed time, the machine and the pool state, written through a bounded in-memory ring drained by its own loop. Reads retry once on a transient fault, GET only, never on door paths. Cost to a door poll: 1.6 microseconds.</li>
+          <li><b>8 Sep</b> The 9-second watchdog. The worst fault fell from 600,106 ms to 9,339 ms. A ticket to the hosting vendor with the evidence.</li>
+          <li><b>9 Sep</b> The killed connection keeps its deadline class instead of a bare "connection is closed". The students list drops 29 columns nobody reads: 459 KB to 289 KB on the wire.</li>
+          <li><b>16 to 17 Sep</b> The size experiment: the scoreboard's 750-by-72 read became one query at 19 to 24 ms; the two large reads moved to 50-row server cursors of about 53 KB under one deadline. Schema 157 stores the server's activity view on the fault row, taken from a fresh connection before the cancel, about 40 ms.</li>
+          <li><b>18 Sep</b> The verdict. Stalls continued on 53 KB responses. A packet capture showed the whole 545 KB reply acknowledged within 0.67 s and the tail of the last TLS record sat decrypted in the library while the driver polled an empty socket: a client-library defect fixed upstream on 13 August. Release 1133 bumped the driver build (libpq 18.0 to 18.6), verified on both machines; full legs of 5,395 and 5,378 passed on the new driver. The vendor's 660 ms pause was innocent.</li>
+          <li><b>18 Sep</b> From 01:12 UTC the repository's CI was refused on a billing hold, so releases 1132 to 1144 shipped on local three-leg runs, each recorded as "no CI run".</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>teachers &middot; 6 to 18 September</div>
+        <h4>A signed code of conduct, eight-step onboarding, the app's teacher side</h4>
+        <ul>
+          <li><b>6 Sep</b> Personal availability links stop leaking: the never-expiring token was in every teacher response; one helper strips it everywhere except the audited mint.</li>
+          <li><b>7 Sep</b> Schema 142, the code of conduct signed natively. Publishing makes an immutable version with a SHA-256 of the exact bytes; the personal token travels in the URL fragment and is redacted from the access log; documents are typed by magic bytes, stripped of location data, readable only by the owner's login with an audit row first; a storage outage costs the drawn picture, never the signature. Two hostile reviews, 22 findings.</li>
+          <li><b>8 to 10 Sep</b> The text: twelve sections, four appendices, one signature where the old form asked for five; Spanish and English line-parallel (44 headings, 123 blocks); the owner's edit pass made forty changes, including replacing an illegal sanction with due process citing the collective agreement's own fault grading. Version 1 published after the owner's edit pass of 9 September; a live end-to-end signing test on 10 September was purged afterwards.</li>
+          <li><b>9 Sep</b> House style: no em dashes and no emojis anywhere a person reads. 145 files swept; language flags drawn as inline SVG, which also settled Catalan.</li>
+          <li><b>10 to 11 Sep</b> Schema 145 to 147: teachers fix their own combos from the personal link; a runtime migration against live Postgres found to be the one path no test leg covers; availability strings unified from three dialects through one parser.</li>
+          <li><b>6 to 14 Sep</b> App 1.6.0 to 1.8.3, the teacher side: a profile tab, an availability painter (tap for a 30-minute slot, drag to paint, a 15-minute stepper), combos, instruments and skills, proposing a student (the server caps 30 per teacher per day); 79 plus 56 new strings in five languages.</li>
+          <li><b>14 Sep</b> Schema 149, eight-step onboarding created atomically with the teacher. Validated with 19 browser scenarios, the real 148-to-149 upgrade and all three CI legs; the 53 existing teachers deliberately not backfilled. On 15 September the teacher card gained a conduct row with the signature line and three document chips.</li>
+          <li><b>18 Sep</b> Release 1131, an outgoing teacher can be inactive: door access revoked at once and never re-granted by reactivation; nothing about their students or history changes.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>combos and groups &middot; 14 to 18 September</div>
+        <h4>One board, four doors, cases that come back</h4>
+        <ul>
+          <li><b>14 Sep</b> Releases 1088 and 1089: one service behind four doors (a secretary's add, a teacher's suggestion, a registration whose course is a group, an internal interest form with captcha, dedup and a kill switch that replaced the rented form). A student is resolved by email or phone tail, never by name; every flag change writes an audit row with its source. Ten independent reviewers.</li>
+          <li><b>14 Sep</b> Schema 150, the case card: contact, snooze to a date that wakes by itself with no cron, retire with a reason, a combo picker where the seat count is information, not a gate. Every write carries the revision it read; a stale one answers 409.</li>
+          <li><b>15 to 16 Sep</b> Schema 153 and 154: changing a signed-up course needs a reason of at least 10 characters and writes the update, an audit row, a comment and the original in one transaction; a placement brings the student back to the finalise lane with an onboarding kind decided once.</li>
+          <li><b>16 Sep</b> Schema 155, a group's place is a studio plus a room, refused with 422 otherwise; the teacher is picked from 48 active teachers, not typed.</li>
+          <li><b>17 Sep</b> Signups-by-course normalised from 52 stored strings to 27 catalogue codes.</li>
+          <li><b>17 to 18 Sep</b> Create, edit and disband opened to secretaries; leaving a group returns the person to the board and undoes the open return card; the last name-based gate on the page replaced by roles.</li>
+          <li><b>18 Sep</b> Search by anyone and anything (debounced 250 ms; digits match a partial phone), live probe 16 to 49 ms.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>rooms and packs &middot; 4 to 18 September</div>
+        <h4>The audit, in-app signup, prices from one catalogue</h4>
+        <ul>
+          <li><b>4 Sep</b> 352 archived rental contracts moved to object storage; native agreements get a deterministic PDF built from the very form page the renter ticked.</li>
+          <li><b>9 Sep</b> A room change is one dropdown, not a reschedule: no notice check, the door grant follows the building only, a failed rebuild is said out loud.</li>
+          <li><b>10 Sep</b> Mandate numbers into the panel; the master sheet retired and protected on 8 September.</li>
+          <li><b>12 Sep</b> Schema 148 and app 1.8.0: teacher prices from one catalogue; the app quotes and mints its own checkout server-side with the role from the token; pack signup in the app as a five-step wizard. A review round caught an empty date and a bare start time underpricing; both now 422.</li>
+          <li><b>12 Sep</b> A seven-lens audit: an app cancellation stayed in the office queue and filing it re-created the door grant (now 409); reschedule approval ignored pack rules; the automatic refund never reached the ledger; the debit-pack dry run still asked Google for a retired sheet; the webhook signature parser kept only the last signature, which would have failed half a secret rotation. All fixed. CI's parity timeout 40 to 90 minutes.</li>
+          <li><b>15 Sep</b> Schema 152, the rental agreement composer: three designs, two judges, four builders, three reviewers. Every catalogue tier now carries a deposit (30 gaps filled, 87 tiers on the form).</li>
+          <li><b>16 Sep</b> The chaser reads pack prices from the catalogue instead of four typed constants; the owner moved the primetime supplement in the panel the same afternoon and every surface followed on its next load.</li>
+          <li><b>18 Sep</b> Schema 160, a cancellation lives on the booking row with its next step and acknowledgement, first in red on the dashboard, struck through on the bookings page. The first real in-app cancellation had produced a board card nobody saw for eight days.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--sky)"></span>debit orders &middot; 4 to 19 September</div>
+        <h4>The panel owns the monthly run</h4>
+        <ul>
+          <li><b>4 Sep</b> Schema 131, a run is a row: runs, frozen items, one-month overrides; membership computed, only the stamp freezes, bound to the preview's hash. Release 999 crash-looped on this migration on one machine while the other kept serving.</li>
+          <li><b>4 Sep</b> The bank file re-derived from eleven accepted files, all 370 rows. Schema 132 adds an encrypted envelope per order under its own derived key, bound to the row id, because the panel held fingerprints and not one recoverable account. Two hand-made September runs backfilled from the bank-accepted bytes (124 frozen lines), without which stamping would have re-charged 100 of 117 active orders in silence.</li>
+          <li><b>5 Sep</b> The sweeps removed: a run is exactly the orders dated that day; the open run went from 182 rows to 41. A sheet column the importer had thrown away (the scheduling-tool family link) imported: 429 linked, zero conflicts.</li>
+          <li><b>6 Sep</b> Schema 135 and 136: one next-charge date per order, the OK tick per month, and the secretary's ledger: 356 dated tabs with 12 header variants became rows, cross-checked against 159 twin tabs, 149 exact. A runs page: a rail by period, provenance badges, a ceremony page for a new run, a search across every run and year. 24 new test files.</li>
+          <li><b>7 Sep</b> The page belongs to the secretaries; create, stamp, advance, cancel, overrides and the bank file stay the owner's. A test asks the running application for every route under the debit prefixes and compares each gate against one written table. A run publisher writes the secretary's dated tab and the one append the scheduling-tool pipe consumes.</li>
+          <li><b>19 Sep</b> Release 1136: pack equals the date; a re-signed mandate adopts its active order and is never a second row. Release 1137, schema 161: instrument rentals as a second population, 44 orders created and 37 items backfilled into the 1 September run, which now reads 198 rows with zero warnings. Release 1141: the next-run announcement, one admin-set date with a 140-character note that may not carry an account number.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--sky)"></span>rental reconciliation &middot; 19 to 20 September</div>
+        <h4>A ledger, a review queue, and the answer "the sheet hides almost no money"</h4>
+        <ul>
+          <li><b>19 Sep, 12:55</b> Reconnaissance: four readers and a synthesis, zero writes. Until then the memory entry read "briefed, NOT STARTED".</li>
+          <li><b>19 Sep, 16:52</b> Release 1142, schema 162: the ledger with three sides of a row, the review queue signed by writer, three importers. Production run 17:00 to 18:10 in the documented order: 2,409 ledger rows, 1,117 months corrected and 347 added, 3,471 OK months, 1,011 open questions. Two review rounds, three fix rounds, 341 tests in the slice.</li>
+          <li><b>20 Sep, 01:18</b> Release 1143: the debit sheet's 296 tabs as a second source (194 run tabs, 2,614 rows in runs), 4 payments written, 1,208 of 1,212 matched; the client history with a running balance and settlement; the overview beside the month view; statistics with every figure a filter or a link, about 200 ms and 100 ms on the live book; card-processor ids redacted from every review answer at every depth. Four review rounds and 26 findings on the importer, three rounds and 25 on the pages.</li>
+          <li><b>20 Sep, 01:35</b> Release 1144: one gate hardened (a same-figure collision beside a row is always drift, never a write), re-run on production with 0 written and the questions re-worded to cite the payment beside them.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>forms, vouchers, the student card &middot; 4 to 18 September</div>
+        <h4>Smaller fixes with a number on each</h4>
+        <ul>
+          <li><b>4 Sep</b> The debit form asks who the lessons are for; every outbound surface enumerates its columns explicitly, one test per surface, so the new column reaches no bank file.</li>
+          <li><b>5 Sep</b> A read-only households card: 59 clusters where one family is two accounts. The merge button held back after a review returned three blockers and fourteen majors.</li>
+          <li><b>7 Sep</b> WhatsApp reaches the right number: the child branch, and invisible direction marks stripped from pasted numbers. Across 5,482 values, 608 links changed and none of them was deliverable before.</li>
+          <li><b>8 Sep</b> Notes during signup, before an account exists. The review reproduced twice that the first version resurrected merged duplicates. Seventeen tests, each confirmed to fail against one of nine mutations.</li>
+          <li><b>17 Sep</b> Schema 158, a minor's guardian reaches the card: the website form had stored the guardian in the student columns. Both are written now; the seven minors since 20 August backfilled with an audit row each.</li>
+          <li><b>18 Sep</b> Releases 1125 to 1128, vouchers: a send the mail provider accepted but the call raised on had gone out twice; each leg now stamps "attempted" before the call with a five-minute grace. 153 archived purchases imported as redeemable rows; the forms table pages itself near the bottom instead of "showing 50 of 1,236".</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>performance and freshness &middot; 6 to 17 September</div>
+        <h4>"I don't want to have to refresh"</h4>
+        <ul>
+          <li><b>16 Sep</b> The shared live-refresh hook on twelve more pages, reviewed page by page by a second agent (five findings fixed before the ship). The reads made cheap alongside: an index on the action log (216,308 sequential scans reading 1.9 billion tuples against 12 index scans, on 11,700 rows; 314 ms to 24 ms), the chasing page's tick from 1.6 MB to 240 KB, the framework in an immutable vendor chunk (230 KB, 74 KB gzipped), the students list served as raw JSON (360 to 190 ms) with gzip level 9 lowered to 6.</li>
+          <li><b>17 Sep</b> The uptime Worker had written its state 4,320 times a day against a free tier of 1,000, so the incident log went blind from about 07:40 UTC each day; now at most 144 heartbeats a day.</li>
+          <li><b>still on the list</b> The door-user list at 1.1 s (door code, Rule 0), stats at 0.8 s (admin only, on demand), server push if the 20 to 30 s tick ever feels slow.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kt"><span class="pip" style="background:var(--teal)"></span>monitoring, filing, the shell &middot; 3 to 15 September</div>
+        <h4>The bug inbox, the bank exports, six personas</h4>
+        <ul>
+          <li><b>3 Sep</b> The mobile menu's bottom half was never reachable (427 px below the fold on a 412-by-828 viewport); the drawer scrolls as one region.</li>
+          <li><b>4 Sep</b> Bank transfers filing: four bank exports, one drop zone, every row routed by rule. Of 342 rows, 182 filtered out, 102 already present, 55 new, 3 held for a human tick; apply refuses unless the plan still hashes to what the preview showed. No AI, deterministic rules.</li>
+          <li><b>4 and 15 Sep</b> A school / rentals switch, then six view personas for the admin. They grant nothing: the token is unchanged and the only direction is narrower.</li>
+          <li><b>6 Sep</b> Schema 137, a bug-report listener: the school reports app bugs in one WhatsApp group; a linked-device service reads that one group and forwards each message with its media through a durable on-disk queue to an inbox page, one click to a task. 37 listener tests.</li>
+          <li><b>13 Sep</b> The whole-estate overview written for any AI reading cold; the memory index compacted from 153 to 126 lines.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="call lilac"><p>Seventeen days, and the shape of them: <span class="tq">every incident became a rule, and every rule became a test</span>. The page above is the system as those rules left it on 20 September 2026.</p></div>
+  </div>
+</section>
+
 <footer>
-  <p><b>Estudio Shine</b> &middot; Barcelona &middot; operations architecture, as built September 2026.<br>
+  <p><b>Estudio Shine</b> &middot; Barcelona &middot; operations architecture, as built 3 September 2026, updated 20 September 2026.<br>
   This page is a static drawing. It holds no credentials, no addresses, no customer data and no working endpoints, it makes no network calls of its own, and nothing on it can reach any Shine system. Figures describe structure and scale, not individuals. Names of people, machines, networks and accounts are deliberately absent.</p>
 </footer>
 </main>
@@ -1314,7 +1910,7 @@ var N = [
   {id:"core", x:700,y:430,w:300,h:140, dom:"core", core:1, t:"Control panel",
    s:"the situation room",
    d:"One web application the entire staff works in, and the backend every other surface talks to. It reshapes itself around whoever signed in, and its design brief is momentum: always show the next action.",
-   f:[["Surface","21 pages, 394 endpoints"],["Runs on","two servers, one region"],["Roles","seven, fenced separately"]]},
+   f:[["Surface","27 pages, 536 endpoints"],["Runs on","two servers, one region"],["Roles","seven, fenced separately"]]},
 
   /* people */
   {id:"staff", x:70,y:100,w:230,h:76, dom:"core", t:"Staff", s:"seven roles",
@@ -1376,17 +1972,17 @@ var N = [
   {id:"calc", x:1390,y:540,w:240,h:76, dom:"field", t:"Delivery calculator", s:"routing & tolls",
    d:"Quotes a delivery from real routing, real toll costs and the live national diesel price, rather than a flat guess that loses money on the long runs.",
    f:[["Inputs","distance, tolls, fuel"],["Fuel price","refreshed all day"]]},
-  {id:"ltr", x:1110,y:646,w:250,h:76, dom:"field", t:"Long-term rentals", s:"244 contracts",
+  {id:"ltr", x:1110,y:646,w:250,h:76, dom:"field", t:"Long-term rentals", s:"249 contracts",
    d:"Monthly instrument rental, off the spreadsheet. A month is paid, failed, or not recorded yet, and never two at once — the rule that stopped most payers looking delinquent.",
-   f:[["Billed months","3,709"],["Writes","append-only events"]]},
+   f:[["Months reconciled","4,140"],["Ledger","payments and bounces since 2023"],["Writes","append-only, keyed by source"]]},
   {id:"quick", x:1390,y:646,w:240,h:76, dom:"field", t:"Express rental", s:"walk-in",
    d:"Counter hire, priced directly from the shop's public catalogue so the desk and the website can never quote different numbers.",
    f:[["Priced from","the shop catalogue"]]},
 
   /* data */
   {id:"db", x:660,y:720,w:250,h:82, dom:"data", t:"Postgres", s:"managed, same region",
-   d:"One schema built by 130 numbered migrations that are only ever appended to. A generated copy of the schema is committed alongside and the build fails if they drift apart.",
-   f:[["Migrations","130, append-only"],["Location","beside the app servers"],["Drift","caught in CI"]]},
+   d:"One schema built by 162 numbered migrations that are only ever appended to. A generated copy of the schema is committed alongside and the build fails if they drift apart.",
+   f:[["Migrations","162, append-only"],["Location","beside the app servers"],["Drift","caught in CI"]]},
   {id:"files", x:660,y:826,w:250,h:76, dom:"data", t:"Object storage", s:"files & PDFs",
    d:"Attachments, identity photos, generated invoices and vouchers. The database keeps only the metadata, so no large binary ever sits in a row.",
    f:[["Holds","documents, photos, PDFs"]]},
@@ -1412,15 +2008,22 @@ var N = [
   {id:"jot", x:70,y:900,w:230,h:76, dom:"gone", t:"Form vendor", s:"switched off",
    d:"Every public form was rented from a third party until 2026. All of them are now first-party, and 7,469 historical submissions plus 1,425 PDFs were exported and kept before the subscription ended.",
    f:[["Status","gone"],["History","exported and retained"]]},
-  {id:"entrix", x:320,y:900,w:230,h:76, dom:"gone", t:"Third-party door app", s:"nearly out",
-   d:"The building-access app renters used to be told to install. Every customer-facing route now points at Shine's own app; a staff-only path remains until the last account is migrated.",
-   f:[["Customer-facing","already gone"],["Remaining","staff admin only"]]},
+  {id:"entrix", x:320,y:900,w:230,h:76, dom:"gone", t:"Third-party door app", s:"switched off",
+   d:"The building-access app renters used to be told to install. Customer-facing routes moved to Shine's own app on 14 August 2026 and the last staff-only link was removed on 9 September 2026.",
+   f:[["Status","gone"],["Retired","9 September 2026"]]},
   {id:"mms", x:70,y:996,w:230,h:76, dom:"gone", t:"Scheduling tool", s:"still running",
    d:"The external tool that still holds the real teaching calendar and issues invoices. Replacing it is the entire next phase, and it is the single largest subscription.",
    f:[["Holds","calendar and invoices"],["Integration","links only, no API"]]},
   {id:"zap", x:320,y:996,w:230,h:76, dom:"gone", t:"Automation glue", s:"one job left",
    d:"Now down to a single responsibility: writing direct-debit records into the scheduling tool. It leaves when that tool does.",
    f:[["Jobs left","one"],["Leaves with","the scheduling tool"]]},
+
+  {id:"ltrledger", x:1110,y:1036,w:250,h:58, dom:"money", t:"Rental ledger", s:"payments, bounces, questions",
+   d:"Every long-term rental payment and bounce since 2023 as one ledger of signed integer cents, fed by report-first importers from the debit runs, the card processor and the office's sheets. A month that does not add up becomes a review question signed by its writer, never a guess.",
+   f:[["Rows","about 2,400"],["Months reconciled","4,140"],["Open questions","about 1,000, each typed"]]},
+  {id:"instrdeb", x:1390,y:1036,w:240,h:58, dom:"money", t:"Instrument debits", s:"second population",
+   d:"Instrument-rental mandates sit beside the school's in the same monthly runs, banded apart: a kind on every order, lookups scoped to their own population, and a next-run date the office reads from a strip under the page header.",
+   f:[["Orders","44 on import, 37 recurring"],["Charge day","the 1st"],["Announcement","one admin-set date"]]},
 
   /* planned — row 1: the money and catalogue foundations */
   {id:"p-bill", x:80,y:1196,w:250,h:92, dom:"plan", state:"plan", t:"Billing & invoicing", s:"planned",
@@ -1469,6 +2072,7 @@ var E = [
   ["cards","worker","",""],
   ["core","mms","links only","gone"],["sepa","zap","hand-off","gone"],
   ["core","jot","replaced","gone"],["core","entrix","replaced","gone"],
+  ["sepa","ltrledger","","money"],["sepa","instrdeb","","money"],["instrdeb","ltrledger","","money"],
   /* planned */
   ["core","p-bill","","plan"],["core","p-cal","","plan"],["core","p-inv","","plan"],
   ["p-inv","p-shop","","plan"],["core","p-app","","plan"],["p-bill","mms","retires","plan"],
