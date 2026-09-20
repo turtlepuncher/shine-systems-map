@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="How Estudio Shine in Barcelona runs a music school, a rehearsal-room rental and an instrument rental on one platform it owns: an interactive systems map, the access architecture, the stack in detail, and what is planned next.">
 <meta name="robots" content="noindex,nofollow">
 <meta property="og:title" content="Estudio Shine, Systems Architecture">
@@ -401,8 +401,44 @@ figcaption{font-size:.79rem;color:var(--fg-faint);margin-top:9px;font-family:var
 footer{padding:34px clamp(1.1rem,4vw,3rem) 54px;max-width:var(--maxw);margin:0 auto}
 footer p{font-family:var(--mono);font-size:.71rem;line-height:1.75;color:var(--fg-faint);max-width:74ch}
 footer b{color:var(--fg-dim);font-weight:500}
+
+/* ---------- mobile: top bar + drawer (20 Sep 2026) ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:45;display:flex;align-items:center;gap:12px;
+  padding:calc(8px + env(safe-area-inset-top,0px)) 14px 8px;background:rgba(5,23,26,.92);
+  border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.topbar .brand div{line-height:1.2}
+.topbar .brand b{font-size:.78rem}
+:root{--bar:calc(57px + env(safe-area-inset-top,0px))}
+.burger{width:40px;height:40px;flex:0 0 auto;border:1px solid var(--line-2);border-radius:8px;background:var(--ink-1);
+  color:var(--fg);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.burger span{display:block;width:18px;height:2px;background:currentColor;border-radius:1px;
+  box-shadow:0 -6px 0 currentColor,0 6px 0 currentColor;transition:box-shadow .16s}
+.burger[aria-expanded="true"] span{box-shadow:none;background:transparent;position:relative}
+.burger[aria-expanded="true"] span::before,.burger[aria-expanded="true"] span::after{
+  content:"";position:absolute;left:0;top:0;width:18px;height:2px;background:var(--fg);border-radius:1px}
+.burger[aria-expanded="true"] span::before{transform:rotate(45deg)}
+.burger[aria-expanded="true"] span::after{transform:rotate(-45deg)}
+.scrim{position:fixed;inset:0;z-index:39;background:rgba(2,10,12,.62);opacity:0;pointer-events:none;transition:opacity .2s;touch-action:none}
+body.nav-open .scrim{opacity:1;pointer-events:auto}
+body.nav-open{overflow:hidden}
+@media (max-width:1179.98px){
+  .main{padding-top:var(--bar)}
+  .sec,.hero{scroll-margin-top:var(--bar)}
+  .rail{display:flex;transform:translateX(-102%);visibility:hidden;transition:transform .22s ease,visibility 0s .22s;
+    overflow-y:auto;overscroll-behavior:contain;
+    padding-top:calc(var(--bar) + 13px);padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+  body.nav-open .rail{transform:none;visibility:visible;transition-delay:0s;box-shadow:12px 0 40px rgba(0,0,0,.55)}
+  .rail .brand{display:none}
+}
+@media (min-width:1180px){ .topbar,.scrim{display:none} }
+.canvas{touch-action:none;-webkit-user-select:none;user-select:none}
 </style>
 
+<div class="topbar" id="topbar">
+  <button class="burger" id="burger" type="button" aria-label="Open the sections menu" aria-controls="nav" aria-expanded="false"><span></span></button>
+  <div class="brand"><div><b>ESTUDIO SHINE</b><span>Systems map</span></div></div>
+</div>
+<div class="scrim" id="scrim"></div>
 <aside class="rail">
   <div class="brand">
     <svg width="26" height="30" viewBox="-70 -66 140 142" aria-hidden="true">
@@ -515,7 +551,7 @@ footer b{color:var(--fg-dim);font-weight:500}
       <div class="mapbody">
         <div class="canvas" id="canvas">
           <svg id="svg" role="img" aria-label="System map: the control panel at the centre, with clusters for people, access and doors, public web and forms, field operations, data and infrastructure, money, and retired vendors. A planned layer adds billing, calendar, a shared instrument catalogue, the shop, and the app roadmap."><g id="cam"></g></svg>
-          <div class="hint">Drag to pan &middot; scroll to zoom</div>
+          <div class="hint">Drag to pan &middot; pinch or scroll to zoom</div>
         </div>
         <aside class="detail" id="detail" aria-live="polite"></aside>
       </div>
@@ -2209,24 +2245,64 @@ canvas.addEventListener("wheel",function(ev){
   zoomAt(ev.clientX,ev.clientY, ev.deltaY<0?1.12:1/1.12);
 },{passive:false});
 
-var drag=null;
+/* One finger or the mouse pans; two fingers pinch (zoom about the midpoint,
+   and the midpoint's own movement pans), so the canvas works on a phone. */
+var pts={}, drag=null, pinch=null;
+function pxScale(){
+  var r=canvas.getBoundingClientRect();
+  var vbw=parseFloat(svg.getAttribute("viewBox").split(" ")[2]);
+  return vbw/r.width;
+}
+function twoPoints(){ var ids=Object.keys(pts); return ids.length>=2 ? [pts[ids[0]],pts[ids[1]]] : null; }
+function startPinch(two){
+  pinch={d:Math.hypot(two[0].x-two[1].x,two[0].y-two[1].y),
+         mx:(two[0].x+two[1].x)/2, my:(two[0].y+two[1].y)/2};
+  drag=null;
+}
 canvas.addEventListener("pointerdown",function(ev){
-  if(ev.target.closest(".nd")) return;
-  drag={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};
+  pts[ev.pointerId]={x:ev.clientX,y:ev.clientY};
+  var two=twoPoints();
+  if(ev.target.closest(".nd")){
+    /* a tap on a box stays a tap (its click opens the detail), but a second
+       finger on a box still makes a pinch */
+    if(two) startPinch(two);
+    return;
+  }
   canvas.setPointerCapture(ev.pointerId);
+  if(two) startPinch(two);
+  else drag={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};
   canvas.classList.add("grabbing");
 });
 canvas.addEventListener("pointermove",function(ev){
+  if(!pts[ev.pointerId]) return;
+  pts[ev.pointerId]={x:ev.clientX,y:ev.clientY};
+  var scale=pxScale();
+  var two=twoPoints();
+  if(pinch && two){
+    var d=Math.hypot(two[0].x-two[1].x,two[0].y-two[1].y);
+    var mx=(two[0].x+two[1].x)/2, my=(two[0].y+two[1].y)/2;
+    if(pinch.d>0 && d>0) zoomAt(mx,my,d/pinch.d);
+    view.tx+=(mx-pinch.mx)*scale; view.ty+=(my-pinch.my)*scale; apply();
+    pinch.d=d; pinch.mx=mx; pinch.my=my;
+    return;
+  }
   if(!drag) return;
-  var r=canvas.getBoundingClientRect();
-  var vbw=parseFloat(svg.getAttribute("viewBox").split(" ")[2]);
-  var scale=vbw/r.width;
   view.tx=drag.tx+(ev.clientX-drag.x)*scale;
   view.ty=drag.ty+(ev.clientY-drag.y)*scale;
   apply();
 });
 ["pointerup","pointercancel","pointerleave"].forEach(function(t){
-  canvas.addEventListener(t,function(){ drag=null; canvas.classList.remove("grabbing"); });
+  canvas.addEventListener(t,function(ev){
+    delete pts[ev.pointerId];
+    var ids=Object.keys(pts);
+    if(ids.length<2) pinch=null;
+    if(ids.length===1){ var p=pts[ids[0]]; drag={x:p.x,y:p.y,tx:view.tx,ty:view.ty}; }
+    else if(ids.length===0){ drag=null; canvas.classList.remove("grabbing"); }
+  });
+});
+/* Safari's own page-zoom gesture must not fire while a finger is on the map. */
+["gesturestart","gesturechange","gestureend"].forEach(function(t){
+  canvas.addEventListener(t,function(ev){ ev.preventDefault(); },{passive:false});
 });
 
 document.getElementById("z-in").onclick=function(){
@@ -2288,6 +2364,23 @@ function clearDim(){
 
 fit();
 window.addEventListener("resize",function(){ /* viewBox scales itself; nothing to do */ });
+
+/* ---- mobile drawer (the rail slides in under 1180px) ---- */
+var burger=document.getElementById("burger"), scrim=document.getElementById("scrim");
+function navOpen(on){
+  document.body.classList.toggle("nav-open",on);
+  burger.setAttribute("aria-expanded",on?"true":"false");
+  burger.setAttribute("aria-label",on?"Close the sections menu":"Open the sections menu");
+}
+if(burger&&scrim){
+  burger.addEventListener("click",function(){ navOpen(!document.body.classList.contains("nav-open")); });
+  scrim.addEventListener("click",function(){ navOpen(false); });
+  [].forEach.call(document.querySelectorAll("#nav a"),function(a){ a.addEventListener("click",function(){ navOpen(false); }); });
+  document.addEventListener("keydown",function(ev){ if(ev.key==="Escape") navOpen(false); });
+  var mq=window.matchMedia("(min-width:1180px)");
+  var onWide=function(m){ if(m.matches) navOpen(false); };
+  if(mq.addEventListener) mq.addEventListener("change",onWide); else if(mq.addListener) mq.addListener(onWide);
+}
 
 /* ---- rail scroll-spy ---- */
 var links=[].slice.call(document.querySelectorAll("#nav a"));
